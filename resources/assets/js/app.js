@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import index from 'core-js';
 import App from './App.vue';
 import Home from './components/Home.vue';
+import tabletest from './components/tabletest.vue';
 import Login from './components/Login.vue';
 import Register from './components/Register.vue';
 import tableTemplate from './components/tableTemplate';
@@ -10,6 +11,10 @@ import tableTemplate from './components/tableTemplate';
 // import VueResource from 'vue-resource';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
+import 'babel-polyfill'
+import Vuetify from 'vuetify'
+import 'vuetify/dist/vuetify.min.css'
+Vue.use(Vuetify)
 
 import VueMaterial from 'vue-material';
 import 'vue-material/dist/vue-material.css';
@@ -44,13 +49,21 @@ const router = new VueRouter({
         name: 'register',
         component: Register,
         meta: {
-            auth: false
+            auth: true
         }
     },
     {
       path: '/dash',
       name: 'dash',
       component: tableTemplate,
+      meta: {
+        auth: true
+      }
+    },
+    {
+      path: '/tabletest',
+      name: 'tabletest',
+      component: tabletest,
       meta: {
         auth: true
       }

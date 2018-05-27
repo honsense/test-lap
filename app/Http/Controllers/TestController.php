@@ -15,13 +15,13 @@ class TestController extends Controller
         $user = User::find(Auth::user()->id);
         if ($request->mode == 'insert'){
             DB::table('requests')->insert([
-                ['reference' => $request->reference, 'requester' => $user->username, 'comments' => $request->comments, 'method' => $request->method]
+                ['reference' => $request->REFERENCE, 'requester' => $user->username, 'comments' => $request->COMMENTS, 'method' => $request->METHOD]
             ]);
         }
         elseif ($request->mode == 'update'){
             DB::table('requests')
                 ->where('Id', $request->Id)
-                ->update(['reference' => $request->reference, 'comments' => $request->comments, 'method' => $request->method]);
+                ->update(['reference' => $request->REFERENCE, 'comments' => $request->COMMENTS, 'method' => $request->METHOD]);
         }
         // $postdata = $request;
         return response($request);
@@ -30,7 +30,7 @@ class TestController extends Controller
     public function approveObs(Request $request)
     {
         DB::table('observations')
-        ->wherein('Id', $request)
+        ->wherein('Id', $request->Id)
         ->update(['approved' => 1]);
         return $request;
     }
