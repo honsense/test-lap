@@ -25406,6 +25406,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -25415,34 +25425,53 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     data: function data() {
         return {
+            observations: [],
+            sampleTypes: ['In Process', 'Raw Material', 'Finished Product', 'Stability', 'Surveillance', 'Utilities', 'Instrumentation', 'Training', 'Validation', 'Preparation', 'CTL', 'Event Related'],
             headers: [{ text: 'Reference', value: 'REFERENCE' }, { text: 'Observation', value: 'OBSERVATION' }, { text: 'Actions', value: 'ACTIONS' }, { text: 'Response', value: 'RESPONSE' }, { text: 'Edit', value: 'Id', sortable: false }],
             showObsForm: false,
             form: {
-                mode: ''
+                mode: '',
+                SAMPLE_TYPE: null
             },
             selected: []
         };
     },
 
-    props: ['dialog', 'selecteditem', 'observations'],
+    props: ['dialog', 'selecteditem'],
     methods: {
-        derp: function derp(item) {
-            this.observation = item;
-            console.log('we did it');
-            this.showObsForm = true;
+        refresh: function refresh() {
+            var _this = this;
+
+            this.search = null;
+            this.$http.get('/getobservations', { params: { "Id": this.selecteditem.Id } }).then(function (res) {
+                _this.observations = res.data.observations;
+            });
+            // if(obs) {
+            //         this.showObsform = false;
+            //         this.showReqform = true;
+            //     }
+            // else {
+            //     this.dialog = false;
         },
+
         close: function close() {
             this.$emit('update:dialog', false);
         },
 
 
         postData: function postData() {
+            console.log(this.form.SAMPLE_TYPE);
+            if (this.form.SAMPLE_TYPE != []) {
+                this.form.SAMPLE_TYPE = JSON.stringify({ data: this.form.SAMPLE_TYPE });
+            } else {
+                this.form.SAMPLE_TYPE = null;
+            }
             var app = this;
             // app.progress=true;
             this.$http.post("test", this.form).then(function (status) {
                 if (status.status = 200) {
+                    app.$emit('update:dialog', false);
                     app.$emit('refresh');
-                    console.log(status);
                 }
             }).catch(function (e) {
                 app.progress = false;
@@ -25450,17 +25479,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         newObservation: function newObservation() {
-            this.observation = {};
+            this.observation = { REQUEST_ID: this.selecteditem.Id, REFERENCE: this.selecteditem.REFERENCE };
+            this.showObsForm = true;
+        },
+        editObservation: function editObservation(item) {
+            this.observation = item;
             this.showObsForm = true;
         },
         approveObs: function approveObs() {
+            var _this2 = this;
+
             this.progress = true;
             var ids = [];
 
             for (var x in this.selected) {
-                ids.push(this.selected[x].Id);
+                if (!this.selected[x].APPROVED) {
+                    ids.push(this.selected[x].Id);
+                };
             }
-            this.$http.post("approveObs", { 'Id': ids });
+            this.$http.post("approveObs", { 'Id': ids }).then(function (status) {
+                if (status.status = 200) {
+                    _this2.refresh();
+                    _this2.selected = [];
+                }
+            }).catch(function (e) {
+                alert(e);
+            });
             // .then(
             //     function(status){
             //         console.log(status);
@@ -25483,16 +25527,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 return "New";
             }
         },
-        filteredObs: function filteredObs() {
-            var _this = this;
 
-            return this.observations.filter(function (observation) {
-                return observation.REQUEST_ID == _this.form.Id;
+        filteredSelected: function filteredSelected() {
+            return this.selected.filter(function (item) {
+                return !item.APPROVED;
             });
         }
     },
     created: function created() {
+        this.refresh();
+        console.log(this.selecteditem.SAMPLE_TYPE);
+        if (this.selecteditem.SAMPLE_TYPE) {
+            Object.assign(this.form, this.selecteditem);
+            this.form.SAMPLE_TYPE = [JSON.parse(this.selecteditem['SAMPLE_TYPE'])][0].data;
+            return;
+        }
         Object.assign(this.form, this.selecteditem);
+        this.form.SAMPLE_TYPE = [];
     }
 });
 
@@ -25552,8 +25603,6 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ObservationForm_vue__ = __webpack_require__(382);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ObservationForm_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__ObservationForm_vue__);
 //
 //
 //
@@ -25595,14 +25644,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-
-
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['showObsForm', 'observation'],
-    components: {
-        ObservationForm: __WEBPACK_IMPORTED_MODULE_0__ObservationForm_vue___default.a
-    },
     data: function data() {
         return {
             form: {
@@ -25612,10 +25657,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     methods: {
-        derp: function derp() {
-            console.log('we did it');
-            showObsForm = 'true';
-        },
         close: function close() {
             this.$emit('update:showObsForm', false);
         },
@@ -25623,12 +25664,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         postData: function postData() {
             var app = this;
-            app.form.mode = 'insert';
             // app.progress=true;
             this.$http.post("postObs", this.form).then(function (status) {
                 if (status.status = 200) {
                     app.$emit('refresh');
-                    console.log(status);
+                    app.$emit('update:showObsForm', false);
                 }
             }).catch(function (e) {
                 app.progress = false;
@@ -25636,7 +25676,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         }
     },
-    computed: {},
+    computed: {
+        title: function title() {
+            if (this.observation.Id) {
+                this.form.mode = 'update';
+                return "Edit";
+            } else {
+                this.form.mode = 'insert';
+                return "New";
+            }
+        }
+    },
     created: function created() {
         this.form = Object.assign({}, this.observation);
     }
@@ -76977,7 +77027,7 @@ exports = module.exports = __webpack_require__(53)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* .app{\n    margin-top: 60px;\n    margin-left: 30px;\n    margin-right: 30px;\n    margin-bottom: 60px; \n} */\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* .app{\n    margin-top: 60px;\n    margin-left: 30px;\n    margin-right: 30px;\n    margin-bottom: 60px; \n} */\n", ""]);
 
 // exports
 
@@ -76992,7 +77042,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__RequestForm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__RequestForm__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ObservationForm__ = __webpack_require__(382);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ObservationForm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__ObservationForm__);
-//
 //
 //
 //
@@ -77094,16 +77143,11 @@ var searchByRef = function searchByRef(items, term) {
     },
 
     methods: {
-        derp: function derp(item) {
-            console.log(item);
-        },
         searchUpdate: function searchUpdate() {
             this.searched = searchByRef(this.sources, this.search);
         },
         onSelect: function onSelect(item) {
-            console.log(item);
             this.dialog = true;
-            // this.showReqform = true;
             this.selecteditem = item;
             this.mode = 'update';
         },
@@ -77119,16 +77163,17 @@ var searchByRef = function searchByRef(items, term) {
             this.search = null;
             this.$http.get('/getrequests').then(function (res) {
                 _this.sources = res.data.requests;
-                _this.observations = res.data.observations;
+                // this.observations = res.data.observations;
                 _this.searched = _this.sources;
                 _this.progress = false;
             });
-            if (obs) {
-                this.showObsform = false;
-                this.showReqform = true;
-            } else {
-                this.dialog = false;
-            }
+            // if(obs) {
+            //         this.showObsform = false;
+            //         this.showReqform = true;
+            //     }
+            // else {
+            //     this.dialog = false;
+            // }
         }
     },
     mounted: function mounted() {
@@ -77188,11 +77233,7 @@ var render = function() {
           _vm._v(" "),
           _vm.dialog
             ? _c("request-form", {
-                attrs: {
-                  dialog: _vm.dialog,
-                  selecteditem: _vm.selecteditem,
-                  observations: _vm.observations
-                },
+                attrs: { dialog: _vm.dialog, selecteditem: _vm.selecteditem },
                 on: {
                   refresh: _vm.refresh,
                   "update:dialog": function($event) {
@@ -77405,24 +77446,6 @@ var render = function() {
                                     { attrs: { xs12: "", sm6: "", md4: "" } },
                                     [
                                       _c("v-text-field", {
-                                        attrs: { label: "Requester" },
-                                        model: {
-                                          value: _vm.form.REQUESTER,
-                                          callback: function($$v) {
-                                            _vm.$set(_vm.form, "REQUESTER", $$v)
-                                          },
-                                          expression: "form.REQUESTER"
-                                        }
-                                      })
-                                    ],
-                                    1
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "v-flex",
-                                    { attrs: { xs12: "", sm6: "", md4: "" } },
-                                    [
-                                      _c("v-text-field", {
                                         attrs: { label: "Comments" },
                                         model: {
                                           value: _vm.form.COMMENTS,
@@ -77450,6 +77473,61 @@ var render = function() {
                                           expression: "form.METHOD"
                                         }
                                       })
+                                    ],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "v-flex",
+                                    { attrs: { xs12: "", sm6: "", md4: "" } },
+                                    [
+                                      _c("v-select", {
+                                        attrs: {
+                                          multiple: "",
+                                          chips: "",
+                                          required: "",
+                                          items: _vm.sampleTypes
+                                        },
+                                        model: {
+                                          value: _vm.form.SAMPLE_TYPE,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.form,
+                                              "SAMPLE_TYPE",
+                                              $$v
+                                            )
+                                          },
+                                          expression: "form.SAMPLE_TYPE"
+                                        }
+                                      })
+                                    ],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "v-flex",
+                                    { attrs: { xs12: "", sm6: "", md4: "" } },
+                                    [
+                                      (_vm.form.PRNUMBER != null) |
+                                      (_vm.form.SAMPLE_TYPE.indexOf(
+                                        "Event Related"
+                                      ) >
+                                        -1)
+                                        ? _c("v-text-field", {
+                                            attrs: { label: "PR #" },
+                                            model: {
+                                              value: _vm.form.PRNUMBER,
+                                              callback: function($$v) {
+                                                _vm.$set(
+                                                  _vm.form,
+                                                  "PRNUMBER",
+                                                  $$v
+                                                )
+                                              },
+                                              expression: "form.PRNUMBER"
+                                            }
+                                          })
+                                        : _vm._e()
                                     ],
                                     1
                                   )
@@ -77517,7 +77595,7 @@ var render = function() {
                             staticClass: "elevation-1",
                             attrs: {
                               headers: _vm.headers,
-                              items: _vm.filteredObs,
+                              items: _vm.observations,
                               "item-key": "Id",
                               "disable-initial-sort": "",
                               "hide-actions": "",
@@ -77534,7 +77612,8 @@ var render = function() {
                                         _c("v-checkbox", {
                                           attrs: {
                                             primary: "",
-                                            "hide-details": ""
+                                            "hide-details": "",
+                                            disabled: !!props.item.APPROVED
                                           },
                                           model: {
                                             value: props.selected,
@@ -77578,7 +77657,7 @@ var render = function() {
                                             attrs: { icon: "" },
                                             nativeOn: {
                                               click: function($event) {
-                                                _vm.derp(props.item)
+                                                _vm.editObservation(props.item)
                                               }
                                             }
                                           },
@@ -77628,7 +77707,7 @@ var render = function() {
                             [_vm._v("Close")]
                           ),
                           _vm._v(" "),
-                          !_vm.selected.length &&
+                          !_vm.filteredSelected.length &&
                           _vm.$auth.check("reviewer" | "admin")
                             ? _c(
                                 "v-btn",
@@ -77642,7 +77721,7 @@ var render = function() {
                                 },
                                 [_vm._v("Add Observation")]
                               )
-                            : !!_vm.selected.length &&
+                            : !!_vm.filteredSelected.length &&
                               _vm.$auth.check("reviewer" | "admin")
                               ? _c(
                                   "v-btn",
@@ -77658,7 +77737,9 @@ var render = function() {
                                     _vm._v(
                                       "Approve Observation" +
                                         _vm._s(
-                                          _vm.selected.length > 1 ? "s" : ""
+                                          _vm.filteredSelected.length > 1
+                                            ? "s"
+                                            : ""
                                         )
                                     )
                                   ]
@@ -77687,6 +77768,7 @@ var render = function() {
               observation: _vm.observation
             },
             on: {
+              refresh: _vm.refresh,
               "update:showObsForm": function($event) {
                 _vm.showObsForm = $event
               }
@@ -77725,7 +77807,8 @@ var render = function() {
             value: _vm.showObsForm,
             "max-width": "700px",
             persistent: "",
-            lazy: ""
+            lazy: "",
+            "hide-overlay": ""
           }
         },
         [
@@ -77733,7 +77816,11 @@ var render = function() {
             "v-card",
             [
               _c("v-card-title", [
-                _vm._v("\n              Observations\n          ")
+                _vm._v(
+                  "\n              " +
+                    _vm._s(_vm.title) +
+                    " Observations\n          "
+                )
               ]),
               _vm._v(" "),
               _c(
@@ -77752,13 +77839,10 @@ var render = function() {
                             { attrs: { xs12: "", sm6: "", md4: "" } },
                             [
                               _c("v-text-field", {
-                                attrs: { label: "Reference" },
-                                model: {
+                                attrs: {
                                   value: _vm.form.REFERENCE,
-                                  callback: function($$v) {
-                                    _vm.$set(_vm.form, "REFERENCE", $$v)
-                                  },
-                                  expression: "form.REFERENCE"
+                                  label: "Reference",
+                                  disabled: ""
                                 }
                               })
                             ],
@@ -77770,7 +77854,12 @@ var render = function() {
                             { attrs: { xs12: "", sm6: "", md4: "" } },
                             [
                               _c("v-text-field", {
-                                attrs: { label: "Observation" },
+                                attrs: {
+                                  label: "Observation",
+                                  disabled: !_vm.$auth.check(
+                                    "reviewer" | "admin"
+                                  )
+                                },
                                 model: {
                                   value: _vm.form.OBSERVATION,
                                   callback: function($$v) {
@@ -77788,7 +77877,12 @@ var render = function() {
                             { attrs: { xs12: "", sm6: "", md4: "" } },
                             [
                               _c("v-text-field", {
-                                attrs: { label: "Action" },
+                                attrs: {
+                                  label: "Action",
+                                  disabled: !_vm.$auth.check(
+                                    "reviewer" | "admin"
+                                  )
+                                },
                                 model: {
                                   value: _vm.form.ACTIONS,
                                   callback: function($$v) {
@@ -77805,16 +77899,18 @@ var render = function() {
                             "v-flex",
                             { attrs: { xs12: "", sm6: "", md4: "" } },
                             [
-                              _c("v-text-field", {
-                                attrs: { label: "Response" },
-                                model: {
-                                  value: _vm.form.RESPONSE,
-                                  callback: function($$v) {
-                                    _vm.$set(_vm.form, "RESPONSE", $$v)
-                                  },
-                                  expression: "form.RESPONSE"
-                                }
-                              })
+                              _vm.title == "New"
+                                ? _c("v-text-field", {
+                                    attrs: { label: "Response" },
+                                    model: {
+                                      value: _vm.form.RESPONSE,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.form, "RESPONSE", $$v)
+                                      },
+                                      expression: "form.RESPONSE"
+                                    }
+                                  })
+                                : _vm._e()
                             ],
                             1
                           )

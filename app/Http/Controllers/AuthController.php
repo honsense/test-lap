@@ -57,11 +57,18 @@ class AuthController extends Controller
     public function getrequests (Request $request)
     {
         $records = DB::table('requests')->get();
-        $observations = DB::table('observations')->get();
 
         return response([
             'status' => 'success',
             'requests' => $records,
+        ]);
+    }
+    public function getobservations (Request $request)
+    {
+        $observations = DB::table('observations')->where('request_id', $request->Id)->get();
+
+        return response([
+            'status' => 'success',
             'observations' => $observations
         ]);
     }

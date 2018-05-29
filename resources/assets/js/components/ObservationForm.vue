@@ -5,26 +5,27 @@
         max-width="700px"
         persistent
         lazy
+        hide-overlay
     >
      <!-- <v-btn slot="activator" color="primary" dark>Open Dialog</v-btn> -->
         <v-card>
             <v-card-title>
-                Observations
+                {{ title }} Observations
             </v-card-title>
             <v-card-text>
                 <v-container grid-list-md>
                     <v-layout wrap>
                         <v-flex xs12 sm6 md4>
-                            <v-text-field v-model="form.REFERENCE" label="Reference"></v-text-field>
+                            <v-text-field :value="form.REFERENCE" label="Reference" disabled></v-text-field>
                         </v-flex>
                         <v-flex xs12 sm6 md4>
-                            <v-text-field v-model="form.OBSERVATION" label="Observation"></v-text-field>
+                            <v-text-field v-model="form.OBSERVATION" label="Observation" :disabled="!$auth.check('reviewer'|'admin')"></v-text-field>
                         </v-flex>
                         <v-flex xs12 sm6 md4>
-                            <v-text-field v-model="form.ACTIONS" label="Action"></v-text-field>
+                            <v-text-field v-model="form.ACTIONS" label="Action" :disabled="!$auth.check('reviewer'|'admin')"></v-text-field>
                         </v-flex>
                         <v-flex xs12 sm6 md4>
-                            <v-text-field v-model="form.RESPONSE" label="Response"></v-text-field>
+                            <v-text-field v-if="title == 'New'" v-model="form.RESPONSE" label="Response"></v-text-field>
                         </v-flex>
                     </v-layout>
                 </v-container>
@@ -40,13 +41,8 @@
 </template>
 
 <script>
-import ObservationForm from './ObservationForm.vue'
-
 export default {
     props: ['showObsForm', 'observation'],
-    components: {
-        ObservationForm
-        },
     data (){
         return{
             form: {
@@ -55,17 +51,12 @@ export default {
         }
     },
     methods:{
-        derp(){
-            console.log('we did it');
-            showObsForm = 'true';
-        },
         close(){
             this.$emit('update:showObsForm', false);
         },
         
         postData: function(){
             var app = this;
-            app.form.mode = 'insert';
             // app.progress=true;
             this.$http.post(
                 "postObs", this.form
@@ -74,7 +65,7 @@ export default {
                 function(status){
                     if(status.status = 200){
                         app.$emit('refresh');
-                        console.log(status);
+                        app.$emit('update:showObsForm', false);
                     }
                 }
             )
@@ -86,6 +77,16 @@ export default {
         },
     },
     computed:{
+        title: function () {
+            if (this.observation.Id){
+                this.form.mode = 'update';
+                return "Edit"
+            }
+            else {
+                this.form.mode = 'insert';
+                return "New"
+            }
+        },
     },
     created() {
         this.form = Object.assign({}, this.observation);

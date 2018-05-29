@@ -15,23 +15,44 @@ class TestController extends Controller
         $user = User::find(Auth::user()->id);
         if ($request->mode == 'insert'){
             DB::table('requests')->insert([
-                ['reference' => $request->REFERENCE, 'requester' => $user->username, 'comments' => $request->COMMENTS, 'method' => $request->METHOD]
+                ['reference' => $request->REFERENCE, 'requester' => $user->username, 'comments' => $request->COMMENTS, 'method' => $request->METHOD, 
+                'sample_type' => $request->SAMPLE_TYPE, 'prnumber' => $request->PRNUMBER]
             ]);
         }
         elseif ($request->mode == 'update'){
+            $sample_type = JSON_ENCODE($request->SAMPLE_TYPE);
             DB::table('requests')
                 ->where('Id', $request->Id)
-                ->update(['reference' => $request->REFERENCE, 'comments' => $request->COMMENTS, 'method' => $request->METHOD]);
+                ->update(['reference' => $request->REFERENCE, 'comments' => $request->COMMENTS, 'method' => $request->METHOD, 'sample_type' => $request->SAMPLE_TYPE,
+                'prnumber' => $request->PRNUMBER]);
         }
         // $postdata = $request;
+        return response($request);
+    }
+    public function postObs(Request $request){
+        $user = User::find(Auth::user()->id);
+        // $rid = DB::TABLE('requests')
+        // ->select('Id')
+        // ->where('reference', $request->REFERENCE);
+        if ($request->mode == 'insert'){
+            DB::table('observations')->insert([
+                ['request_id' => $request->REQUEST_ID, 'reference' => $request->REFERENCE, 'observation' => $request->OBSERVATION, 'actions' => $request->ACTIONS, 'created_by' => $user->username, 'updated_by' => $user->username]
+            ]);
+        }
+        elseif ($request->mode == 'update'){
+            DB::table('observations')
+                ->where('Id', $request->Id)
+                ->update(['observation' => $request->OBSERVATION, 'actions' => $request->ACTIONS, 'response' => $request->RESPONSE, 'updated_by' => $user->username]);
+        }
         return response($request);
     }
 
     public function approveObs(Request $request)
     {
+        $user = User::find(Auth::user()->id);
         DB::table('observations')
         ->wherein('Id', $request->Id)
-        ->update(['approved' => 1]);
-        return $request;
+        ->update(['approved' => 1, 'updated_by' => $user->username, 'approved_by' => $user->username]);
+        return response($request);
     }
 }

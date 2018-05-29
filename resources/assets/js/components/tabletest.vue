@@ -15,7 +15,7 @@
                 >
                 </v-text-field>
         </v-card-title>
-  <request-form v-if="dialog" @refresh="refresh" :dialog.sync="dialog" :selecteditem="selecteditem" :observations="observations"></request-form>    
+  <request-form v-if="dialog" @refresh="refresh" :dialog.sync="dialog" :selecteditem="selecteditem"></request-form>    
   <v-data-table
     :headers="headers"
     :items="sources"
@@ -33,7 +33,6 @@
       <td>{{ props.item.METHOD }}</td>
       <td>{{ props.item.DATE_REQUESTED }}</td>
     </tr>
-    <!-- <request-form v-if="showReqform" @refresh="refresh" @derp="derp" :mode="mode" :selecteditem.sync="selecteditem" :activeObs.sync="activeObs" :showObsform.sync="showObsform" :showReqform.sync="showReqform" :observations="observations"></request-form> -->
     </template>
     <template slot="no-results" :value="true">
         <!-- <v-jumbotron> -->
@@ -103,16 +102,11 @@ export default {
         }
     },
     methods: {
-        derp: function (item) {
-            console.log(item)
-        },
         searchUpdate: function() {
             this.searched = searchByRef(this.sources, this.search);
         },
         onSelect: function(item){
-            console.log(item);
             this.dialog = true;
-            // this.showReqform = true;
             this.selecteditem = item;
             this.mode = 'update';
         },
@@ -127,17 +121,17 @@ export default {
             this.$http.get('/getrequests')
             .then(res => {
                 this.sources = res.data.requests;
-                this.observations = res.data.observations;
+                // this.observations = res.data.observations;
                 this.searched = this.sources;
                 this.progress = false;
             });
-            if(obs) {
-                    this.showObsform = false;
-                    this.showReqform = true;
-                }
-            else {
-                this.dialog = false;
-            }
+            // if(obs) {
+            //         this.showObsform = false;
+            //         this.showReqform = true;
+            //     }
+            // else {
+            //     this.dialog = false;
+            // }
         },
     },
     mounted: function () {
