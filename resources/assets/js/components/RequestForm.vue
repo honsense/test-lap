@@ -38,11 +38,11 @@
                                     chips
                                     required
                                     :items="sampleTypes"
-                                    v-model="form.SAMPLE_TYPE"
+                                    v-model="SAMPLE_TYPE"
                                     ></v-select>
                             </v-flex>
                             <v-flex xs12 sm6 md4>
-                                <v-text-field v-if="form.PRNUMBER != null | form.SAMPLE_TYPE.indexOf('Event Related') > -1" v-model="form.PRNUMBER" label="PR #"></v-text-field>
+                                <v-text-field v-if="form.PRNUMBER != null || SAMPLE_TYPE.indexOf('Event Related') > -1" v-model="form.PRNUMBER" label="PR #"></v-text-field>
                             </v-flex>
                         </v-layout>
                     </v-container>
@@ -139,8 +139,8 @@ export default {
             showObsForm: false,
             form: {
                 mode: '',
-                SAMPLE_TYPE: null,
             },
+            SAMPLE_TYPE: null,
             selected: [],
         }
     },
@@ -166,8 +166,8 @@ export default {
         
         postData: function(){
             console.log(this.form.SAMPLE_TYPE)
-            if(this.form.SAMPLE_TYPE != []){
-                this.form.SAMPLE_TYPE = JSON.stringify({data: this.form.SAMPLE_TYPE});
+            if(this.SAMPLE_TYPE.length > 0){
+                this.form.SAMPLE_TYPE = JSON.stringify(this.SAMPLE_TYPE);
             }
             else{
                 this.form.SAMPLE_TYPE = null;
@@ -255,14 +255,21 @@ export default {
     },
     created() {
         this.refresh();
-        console.log(this.selecteditem.SAMPLE_TYPE)
-        if (this.selecteditem.SAMPLE_TYPE){
-            Object.assign(this.form, this.selecteditem)
-            this.form.SAMPLE_TYPE = [JSON.parse(this.selecteditem['SAMPLE_TYPE'])][0].data;
-            return;
-        }
+        // console.log(this.selecteditem.SAMPLE_TYPE)
+        // if (this.selecteditem.SAMPLE_TYPE){
+        //     Object.assign(this.form, this.selecteditem)
+        //     this.form.SAMPLE_TYPE = [JSON.parse(this.selecteditem['SAMPLE_TYPE'])][0].data;
+        //     return;
+        // }
         Object.assign(this.form, this.selecteditem);
-        this.form.SAMPLE_TYPE = [];
+        if(this.form.SAMPLE_TYPE){
+            this.SAMPLE_TYPE = JSON.parse(this.form.SAMPLE_TYPE);
+        }
+        else{
+            this.SAMPLE_TYPE = [];
+        }
+        console.log(this.form);
+        // this.form.SAMPLE_TYPE = [];
     }
 }
 </script>

@@ -25430,9 +25430,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             headers: [{ text: 'Reference', value: 'REFERENCE' }, { text: 'Observation', value: 'OBSERVATION' }, { text: 'Actions', value: 'ACTIONS' }, { text: 'Response', value: 'RESPONSE' }, { text: 'Edit', value: 'Id', sortable: false }],
             showObsForm: false,
             form: {
-                mode: '',
-                SAMPLE_TYPE: null
+                mode: ''
             },
+            SAMPLE_TYPE: null,
             selected: []
         };
     },
@@ -25461,8 +25461,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         postData: function postData() {
             console.log(this.form.SAMPLE_TYPE);
-            if (this.form.SAMPLE_TYPE != []) {
-                this.form.SAMPLE_TYPE = JSON.stringify({ data: this.form.SAMPLE_TYPE });
+            if (this.SAMPLE_TYPE.length > 0) {
+                this.form.SAMPLE_TYPE = JSON.stringify(this.SAMPLE_TYPE);
             } else {
                 this.form.SAMPLE_TYPE = null;
             }
@@ -25536,14 +25536,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     created: function created() {
         this.refresh();
-        console.log(this.selecteditem.SAMPLE_TYPE);
-        if (this.selecteditem.SAMPLE_TYPE) {
-            Object.assign(this.form, this.selecteditem);
-            this.form.SAMPLE_TYPE = [JSON.parse(this.selecteditem['SAMPLE_TYPE'])][0].data;
-            return;
-        }
+        // console.log(this.selecteditem.SAMPLE_TYPE)
+        // if (this.selecteditem.SAMPLE_TYPE){
+        //     Object.assign(this.form, this.selecteditem)
+        //     this.form.SAMPLE_TYPE = [JSON.parse(this.selecteditem['SAMPLE_TYPE'])][0].data;
+        //     return;
+        // }
         Object.assign(this.form, this.selecteditem);
-        this.form.SAMPLE_TYPE = [];
+        if (this.form.SAMPLE_TYPE) {
+            this.SAMPLE_TYPE = JSON.parse(this.form.SAMPLE_TYPE);
+        } else {
+            this.SAMPLE_TYPE = [];
+        }
+        console.log(this.form);
+        // this.form.SAMPLE_TYPE = [];
     }
 });
 
@@ -77489,15 +77495,11 @@ var render = function() {
                                           items: _vm.sampleTypes
                                         },
                                         model: {
-                                          value: _vm.form.SAMPLE_TYPE,
+                                          value: _vm.SAMPLE_TYPE,
                                           callback: function($$v) {
-                                            _vm.$set(
-                                              _vm.form,
-                                              "SAMPLE_TYPE",
-                                              $$v
-                                            )
+                                            _vm.SAMPLE_TYPE = $$v
                                           },
-                                          expression: "form.SAMPLE_TYPE"
+                                          expression: "SAMPLE_TYPE"
                                         }
                                       })
                                     ],
@@ -77508,11 +77510,9 @@ var render = function() {
                                     "v-flex",
                                     { attrs: { xs12: "", sm6: "", md4: "" } },
                                     [
-                                      (_vm.form.PRNUMBER != null) |
-                                      (_vm.form.SAMPLE_TYPE.indexOf(
-                                        "Event Related"
-                                      ) >
-                                        -1)
+                                      _vm.form.PRNUMBER != null ||
+                                      _vm.SAMPLE_TYPE.indexOf("Event Related") >
+                                        -1
                                         ? _c("v-text-field", {
                                             attrs: { label: "PR #" },
                                             model: {
