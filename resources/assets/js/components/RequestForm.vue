@@ -36,13 +36,39 @@
                                 <v-select
                                     multiple
                                     chips
-                                    required
                                     :items="sampleTypes"
                                     v-model="SAMPLE_TYPE"
+                                    label="Sample Type(s)"
                                     ></v-select>
                             </v-flex>
                             <v-flex xs12 sm6 md4>
                                 <v-text-field v-if="form.PRNUMBER != null || SAMPLE_TYPE.indexOf('Event Related') > -1" v-model="form.PRNUMBER" label="PR #"></v-text-field>
+                            </v-flex>
+                            <v-flex xs12 sm6 md4>
+                                <v-select
+                                    :disabled="!$auth.check('reviewer'|'admin')"
+                                    :items="users"
+                                    v-model="form.ASSIGNED_REVIEWER"
+                                    label="Assigned Reviewer"
+                                    ></v-select>
+                            </v-flex>
+                            <v-flex xs12 sm6 md4>
+                                <v-menu
+                                    ref="menu"
+                                    :close-on-content-click="false"
+                                    v-model="menu"
+                                    :return-value.sync="form.DATE_DUE"
+                                    lazy
+                                    transition="scale-transition"
+                                    offset-y
+                                >
+                                    <v-text-field
+                                        slot="activator"
+                                        v-model="form.DATE_DUE"
+                                        label="Due Date"
+                                    ></v-text-field>
+                                    <v-date-picker v-model="form.DATE_DUE" @input="$refs.menu.save(form.DATE_DUE)"></v-date-picker>
+                                </v-menu>
                             </v-flex>
                         </v-layout>
                     </v-container>
@@ -134,17 +160,17 @@ export default {
                 {text: 'Actions', value: 'ACTIONS'},
                 {text: 'Response', value: 'RESPONSE'},
                 {text: 'Edit', value: 'Id', sortable: false},
-                // {text: 'Date Requested', value: 'DATE_REQUESTED'},
             ],
             showObsForm: false,
             form: {
                 mode: '',
+                DATE_DUE: null,
             },
             SAMPLE_TYPE: null,
-            selected: [],
+            selected: [],            
         }
     },
-    props:['dialog', 'selecteditem'],
+    props:['dialog', 'selecteditem', 'users'],
     methods:{
         refresh: function () {
             this.search = null;
@@ -165,7 +191,6 @@ export default {
         },
         
         postData: function(){
-            console.log(this.form.SAMPLE_TYPE)
             if(this.SAMPLE_TYPE.length > 0){
                 this.form.SAMPLE_TYPE = JSON.stringify(this.SAMPLE_TYPE);
             }
@@ -223,16 +248,6 @@ export default {
             {
                 alert(e);
             });
-            // .then(
-            //     function(status){
-            //         console.log(status);
-            //         if(status.data = 'Data Inserted...'){
-            //             this.$emit('update:showReqform', false);
-            //             this.$parent.refresh();
-            //             this.$emit('update:search', null)
-            //         }
-            //      this.progress=false;
-            // });
         },
     },
     computed:{
@@ -255,12 +270,6 @@ export default {
     },
     created() {
         this.refresh();
-        // console.log(this.selecteditem.SAMPLE_TYPE)
-        // if (this.selecteditem.SAMPLE_TYPE){
-        //     Object.assign(this.form, this.selecteditem)
-        //     this.form.SAMPLE_TYPE = [JSON.parse(this.selecteditem['SAMPLE_TYPE'])][0].data;
-        //     return;
-        // }
         Object.assign(this.form, this.selecteditem);
         if(this.form.SAMPLE_TYPE){
             this.SAMPLE_TYPE = JSON.parse(this.form.SAMPLE_TYPE);
@@ -268,8 +277,6 @@ export default {
         else{
             this.SAMPLE_TYPE = [];
         }
-        console.log(this.form);
-        // this.form.SAMPLE_TYPE = [];
     }
 }
 </script>

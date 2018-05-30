@@ -57,10 +57,12 @@ class AuthController extends Controller
     public function getrequests (Request $request)
     {
         $records = DB::table('requests')->get();
+        $users = DB::table('users')->select('username')->where('roles', 'reviewer')->get();
 
         return response([
             'status' => 'success',
             'requests' => $records,
+            'users' => $users
         ]);
     }
     public function getobservations (Request $request)

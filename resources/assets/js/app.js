@@ -22,7 +22,7 @@ import 'vue-material/dist/theme/default.css';
 
 Vue.use(VueRouter);
 Vue.use(VueAxios, axios);
-axios.defaults.baseURL = 'http://test.test/api/';
+axios.defaults.baseURL = '/api/';
 
 Vue.use(VueMaterial);
 Vue.config.productionTip = false;

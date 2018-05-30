@@ -15,7 +15,7 @@
                 >
                 </v-text-field>
         </v-card-title>
-  <request-form v-if="dialog" @refresh="refresh" :dialog.sync="dialog" :selecteditem="selecteditem"></request-form>    
+  <request-form v-if="dialog" @refresh="refresh" :dialog.sync="dialog" :selecteditem="selecteditem" :users="users"></request-form>    
   <v-data-table
     :headers="headers"
     :items="sources"
@@ -35,7 +35,6 @@
     </tr>
     </template>
     <template slot="no-results" :value="true">
-        <!-- <v-jumbotron> -->
             <v-container fluid grid-list-xl fill-height>
                 <v-layout row justify-space-between>
                     <v-flex></v-flex>
@@ -49,7 +48,6 @@
                     <v-flex></v-flex>
                 </v-layout>
             </v-container>
-        <!-- </v-jumbotron> -->
     </template>
   </v-data-table>
     </v-card>
@@ -59,7 +57,7 @@
 
 <script>
 import RequestForm from './RequestForm'
-import ObservationForm from './ObservationForm'
+
 const toLower = text => {
     return text.toString().toLowerCase()
 }
@@ -75,7 +73,6 @@ export default {
     name: 'tableTemplate',
     components:{
         RequestForm,
-        ObservationForm
     },
     data() {
         return{
@@ -88,16 +85,9 @@ export default {
                 {text: 'Date Requested', value: 'DATE_REQUESTED'},
             ], 
             sources: [],
-            observations: [],
-            // source: '',
-            showReqform: false,
-            showObsform: false,
             progress: true,
             search: null,
             searched: [],
-            mode: '',
-            activeObs: {},
-            obsMode: '',
             selecteditem: {},
         }
     },
@@ -108,30 +98,20 @@ export default {
         onSelect: function(item){
             this.dialog = true;
             this.selecteditem = item;
-            this.mode = 'update';
         },
         newRequest: function() {
             this.dialog = true;
-            this.selecteditem = {};
-            // {REFERENCE: this.search};
-            this.mode = 'insert';
+            this.selecteditem = {REFERENCE: this.search}; //may just use {} instead of REFERENCE: this.search
         },
         refresh: function (obs) {
             this.search = null;
             this.$http.get('/getrequests')
             .then(res => {
                 this.sources = res.data.requests;
-                // this.observations = res.data.observations;
+                this.users = res.data.users.map(x => {return x.username});
                 this.searched = this.sources;
                 this.progress = false;
             });
-            // if(obs) {
-            //         this.showObsform = false;
-            //         this.showReqform = true;
-            //     }
-            // else {
-            //     this.dialog = false;
-            // }
         },
     },
     mounted: function () {
