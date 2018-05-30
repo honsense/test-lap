@@ -20,11 +20,13 @@ use Illuminate\Http\Request;
 Route::post('auth/register', 'AuthController@register');
 Route::post('auth/login', 'AuthController@login');
 Route::get('getrequests', 'AuthController@getrequests');
+Route::get('getselectedrequest', 'AuthController@getselectedrequest');
 Route::get('getobservations', 'AuthController@getobservations');
 Route::group(['middleware' => 'jwt.auth'], function(){
 	Route::post('test', 'TestController@test');
 	Route::post('postObs', 'TestController@postObs');
 	Route::post('approveObs', 'TestController@approveObs');
+	Route::post('approveRequest', 'TestController@approveRequest');
 	Route::get('auth/user', 'AuthController@user');
 	Route::post('auth/logout', 'AuthController@logout');
 });

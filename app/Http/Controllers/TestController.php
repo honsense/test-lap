@@ -56,4 +56,17 @@ class TestController extends Controller
         ->update(['approved' => 1, 'updated_by' => $user->username, 'approved_by' => $user->username]);
         return response($request);
     }
+
+    public function approveRequest(Request $request)
+    {
+        $user = User::find(Auth::user()->id);
+
+        if(DB::table('requests')->select('APPROVED')->where('Id', $request->Id))
+        {
+            DB::table('requests')
+            ->where('Id', $request->Id)
+            ->update(['approved' => 1, 'updated_by' => $user->username, 'approved_by' => $user->username]);
+            return response($request);
+        }
+    }
 }

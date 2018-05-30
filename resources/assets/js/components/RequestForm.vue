@@ -74,9 +74,10 @@
                     </v-container>
                 </v-card-text>
                 <v-card-actions>
+                    <v-btn color="blue darken-1" flat :disabled="!!selecteditem.APPROVED" @click="approveRequest">Approve</v-btn>
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" flat @click.native="close">Cancel</v-btn>
-                    <v-btn color="blue darken-1" flat @click.native="postData">Save</v-btn>
+                    <v-btn color="blue darken-1" flat @click.native="postData" :disabled="!!this.selecteditem.APPROVED">Save</v-btn>
                 </v-card-actions>
             </v-card>
         </v-tab-item>
@@ -108,9 +109,10 @@
                                 <td>{{ props.item.ACTIONS }}</td>
                                 <td>{{ props.item.RESPONSE }}</td>
                                 <td class="justify-center layout px-0">
-                                    <v-btn icon class="mx-0" @click.native="editObservation(props.item)">
+                                    <v-btn v-if="!props.item.APPROVED" icon class="mx-0" @click.native="editObservation(props.item)">
                                         <v-icon color="teal">edit</v-icon>
                                     </v-btn>
+                                    <v-icon v-else color="teal">done</v-icon>
                                 </td>
                             <!-- </tr> -->
                         </template>
@@ -119,7 +121,7 @@
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" flat @click.native="close">Close</v-btn>
-                    <v-btn v-if="!filteredSelected.length && $auth.check('reviewer'|'admin')" color="blue darken-1" flat @click.native="newObservation">Add Observation</v-btn>
+                    <v-btn v-if="!filteredSelected.length && $auth.check('reviewer'|'admin')" color="blue darken-1" flat @click.native="newObservation" :disabled="!!this.selecteditem.APPROVED">Add Observation</v-btn>
                     <v-btn v-else-if="!!filteredSelected.length && $auth.check('reviewer'|'admin')" color="blue darken-1" flat @click.native="approveObs">Approve Observation{{filteredSelected.length>1 ? 's' : ''}}</v-btn>
                 </v-card-actions>
             </v-card>
@@ -205,8 +207,8 @@ export default {
             .then(
                 function(status){
                     if(status.status = 200){
-                        app.$emit('update:dialog', false);
                         app.$emit('refresh');
+                        app.$emit('update:dialog', false);
                     }
                 }
             )
@@ -216,14 +218,17 @@ export default {
                 alert(e);
             });
         },
+
         newObservation: function () {
             this.observation = {REQUEST_ID: this.selecteditem.Id, REFERENCE: this.selecteditem.REFERENCE};
             this.showObsForm = true;
         },
+        
         editObservation: function (item) {
             this.observation = item;
             this.showObsForm = true;
         },
+        
         approveObs: function () {
             this.progress=true;
             var ids = [];
@@ -249,7 +254,26 @@ export default {
                 alert(e);
             });
         },
+
+        approveRequest: function () {
+            this.$http.post(
+                "approveRequest", this.selecteditem
+            )
+            .then(status => 
+                {
+                    if(status.status = 200){
+                        this.$emit('refresh');
+                        this.$emit('update:dialog', false);
+                    }
+                }
+            )
+            .catch(e =>
+            {
+                alert(e);
+            });
+        },
     },
+    
     computed:{
         title: function () {
             if (this.selecteditem.Id){

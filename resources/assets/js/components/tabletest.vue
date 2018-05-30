@@ -96,8 +96,17 @@ export default {
             this.searched = searchByRef(this.sources, this.search);
         },
         onSelect: function(item){
-            this.dialog = true;
-            this.selecteditem = item;
+            this.$http.get('/getselectedrequest', {params: {"Id": item.Id}})
+            .then(res =>
+            {
+                if(res.status = 200){
+                    this.selecteditem = res.data.request;
+                    this.dialog = true;
+                }
+                else {
+                    return;
+                }
+            });
         },
         newRequest: function() {
             this.dialog = true;

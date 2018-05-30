@@ -7,7 +7,7 @@
     <v-spacer></v-spacer>
     <v-toolbar-items class="hidden-sm-and-down">
       <!-- <v-btn to='/home' flat>Home</v-btn> -->
-      <v-btn to='/tabletest' flat v-if="$auth.check()">Home</v-btn>
+      <v-btn to='/dashboard' flat v-if="$auth.check()">Home</v-btn>
       <v-btn to='/home' flat v-if="$auth.check('admin')">Admin Home</v-btn>
       <v-btn to='login' flat v-if="!$auth.check()">Login</v-btn>
       <v-btn to='register' flat v-if="$auth.check('admin')">Register</v-btn>

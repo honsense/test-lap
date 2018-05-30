@@ -14,17 +14,19 @@ import VueAxios from 'vue-axios';
 import 'babel-polyfill'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
+
 Vue.use(Vuetify)
 
-import VueMaterial from 'vue-material';
-import 'vue-material/dist/vue-material.css';
-import 'vue-material/dist/theme/default.css';
+// import VueMaterial from 'vue-material';
+// import 'vue-material/dist/vue-material.css';
+// import 'vue-material/dist/theme/default.css';
 
 Vue.use(VueRouter);
 Vue.use(VueAxios, axios);
 axios.defaults.baseURL = '/api/';
 
-Vue.use(VueMaterial);
+// Vue.use(VueMaterial);
 Vue.config.productionTip = false;
 
 
@@ -53,15 +55,7 @@ const router = new VueRouter({
         }
     },
     {
-      path: '/dash',
-      name: 'dash',
-      component: tableTemplate,
-      meta: {
-        auth: true
-      }
-    },
-    {
-      path: '/tabletest',
+      path: '/dashboard',
       name: 'tabletest',
       component: tabletest,
       meta: {
