@@ -6,7 +6,8 @@ import Home from './components/Home.vue';
 import tabletest from './components/tabletest.vue';
 import Login from './components/Login.vue';
 import Register from './components/Register.vue';
-import tableTemplate from './components/tableTemplate';
+import admin from './components/admin.vue';
+import PasswordReset from './components/PasswordReset.vue';
 // import router from './router';
 // import VueResource from 'vue-resource';
 import axios from 'axios';
@@ -50,6 +51,22 @@ const router = new VueRouter({
         path: '/Register',
         name: 'register',
         component: Register,
+        meta: {
+            auth: 'admin'
+        }
+    },
+    {
+        path: '/admin',
+        name: 'admin',
+        component: admin,
+        meta: {
+            auth: 'admin'
+        }
+    },
+    {
+        path: '/passwordchange',
+        name: 'passwordchange',
+        component: PasswordReset,
         meta: {
             auth: true
         }

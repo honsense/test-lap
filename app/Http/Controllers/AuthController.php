@@ -100,4 +100,39 @@ class AuthController extends Controller
         ], 200);
     }
 
+    public function changePass(Request $request)
+    {
+        $user = User::find(Auth::user()->id);
+        $credentials = array("username" => $user->username, "password" => $request->password);
+
+        if ( ! JWTAuth::attempt($credentials)) {
+            return response([
+                'status' => 'error',
+                'error' => 'invalid.credentials',
+                'msg' => 'Invalid Credentials.'
+            ], 400);
+        };
+
+        $user->password = bcrypt($request->newPassword);
+        $user->save();
+        return response([
+            'status' => 'success'
+        ], 200);
+
+    }
+
+    public function passwordReset(Request $request)
+    {
+        $user = User::find(Auth::user()->id);
+        if ($user->roles == 'admin')
+        {
+            DB::table('users')
+                ->where('username', $request->username)
+                ->update(['password' => bcrypt('welcome')]);
+            
+            return response([
+                'status' => 'success'
+            ], 200);
+        }
+    }
 }

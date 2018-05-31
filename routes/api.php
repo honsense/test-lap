@@ -23,6 +23,8 @@ Route::get('getrequests', 'AuthController@getrequests');
 Route::get('getselectedrequest', 'AuthController@getselectedrequest');
 Route::get('getobservations', 'AuthController@getobservations');
 Route::group(['middleware' => 'jwt.auth'], function(){
+	Route::post('changePass', 'AuthController@changePass');
+	Route::post('passwordReset', 'AuthController@passwordReset');
 	Route::post('test', 'TestController@test');
 	Route::post('postObs', 'TestController@postObs');
 	Route::post('approveObs', 'TestController@approveObs');

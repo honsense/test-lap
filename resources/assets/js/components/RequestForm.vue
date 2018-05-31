@@ -184,7 +184,8 @@ export default {
                 STATUS: 'Completed',
             },
             SAMPLE_TYPE: null,
-            selected: [],            
+            selected: [],   
+            menu: false,         
         }
     },
     props:['dialog', 'selecteditem', 'users'],
@@ -222,9 +223,11 @@ export default {
                         return;
                     }
                 }
+
+                this.approveRequest();
+
             }
 
-            this.approveRequest();
             var app = this
             // app.progress=true;
             this.$http.post(

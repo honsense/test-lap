@@ -8,8 +8,8 @@
         </div>
         <form autocomplete="off" v-on:submit="register" v-if="!success">
             <div class="form-group" v-bind:class="{ 'has-error': error && errors.username }">
-                <label for="name">Name</label>
-                <input type="text" id="name" class="form-control" v-model="name" required>
+                <label for="username">Name</label>
+                <input type="text" id="username" class="form-control" v-model="username" required>
                 <span class="help-block" v-if="error && errors.username">{{ errors.username }}</span>
             </div>
             <div class="form-group" v-bind:class="{ 'has-error': error && errors.email }">
@@ -36,7 +36,7 @@
     export default {
         data(){
             return {
-                name: '',
+                username: '',
                 email: '',
                 role: '',
                 password: '',
@@ -51,7 +51,7 @@
                 var app = this
                 this.$auth.register({
                     params: {
-                        username: app.name,
+                        username: app.username,
                         email: app.email,
                         role: app.role,
                         password: app.password
