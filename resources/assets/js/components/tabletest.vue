@@ -49,6 +49,20 @@
                 </v-layout>
             </v-container>
     </template>
+    <template slot="no-data" :value="true">
+            <v-container fluid grid-list-xl fill-height>
+                <v-layout row justify-space-between>
+                    <v-flex></v-flex>
+                    <v-flex>
+                        <h3 class="display-3">No records found</h3>
+                        <v-divider class="my-3"></v-divider>
+                        <div class="title mb-3">Create a new record below</div>
+                        <v-btn @click="newRequest" color="primary" dark>New Request</v-btn>
+                    </v-flex>
+                    <v-flex></v-flex>
+                </v-layout>
+            </v-container>
+    </template>
   </v-data-table>
     </v-card>
 </div>
