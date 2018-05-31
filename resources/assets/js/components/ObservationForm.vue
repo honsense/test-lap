@@ -25,6 +25,14 @@
                             <v-text-field v-model="form.ACTIONS" label="Action" :disabled="!$auth.check('reviewer')"></v-text-field>
                         </v-flex>
                         <v-flex xs12 sm6 md4>
+                            <v-select
+                                :items="['Minor', 'Major', 'Critical']"
+                                :disabled="$auth.check('analyst')"
+                                v-model="form.CRITICALITY"
+                                label="Criticality"
+                            ></v-select>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
                             <v-text-field v-if="title != 'New'" v-model="form.RESPONSE" label="Response"></v-text-field>
                         </v-flex>
                     </v-layout>

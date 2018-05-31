@@ -38,13 +38,15 @@ class TestController extends Controller
         // ->where('reference', $request->REFERENCE);
         if ($request->mode == 'insert'){
             DB::table('observations')->insert([
-                ['request_id' => $request->REQUEST_ID, 'reference' => $request->REFERENCE, 'observation' => $request->OBSERVATION, 'actions' => $request->ACTIONS, 'created_by' => $user->username, 'updated_by' => $user->username]
+                ['request_id' => $request->REQUEST_ID, 'reference' => $request->REFERENCE, 'observation' => $request->OBSERVATION,
+                'actions' => $request->ACTIONS, 'created_by' => $user->username, 'updated_by' => $user->username, 'criticality' => $request->CRITICALITY]
             ]);
         }
         elseif ($request->mode == 'update'){
             DB::table('observations')
                 ->where('Id', $request->Id)
-                ->update(['observation' => $request->OBSERVATION, 'actions' => $request->ACTIONS, 'response' => $request->RESPONSE, 'updated_by' => $user->username]);
+                ->update(['observation' => $request->OBSERVATION, 'actions' => $request->ACTIONS, 'response' => $request->RESPONSE, 'updated_by' => $user->username,
+                'criticality' => $request->CRITICALITY]);
         }
         return response($request);
     }

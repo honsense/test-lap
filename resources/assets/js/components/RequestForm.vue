@@ -79,15 +79,16 @@
                     </v-container>
                 </v-card-text>
                 <v-divider></v-divider>
+                <div v-bind:class="[ selecteditem.STATUS == 'Approved' ? 'alert-success' : 'alert-danger']">
+                    <p>Current status: {{ selecteditem.STATUS }}</p>
+                </div>
                 <v-card-actions>
-
-                    <!-- <v-btn color="blue darken-1" flat :disabled="!!selecteditem.APPROVED" @click="approveRequest">Approve</v-btn> -->
                     <v-select
                     v-if="title != 'New'"
-                    :items="$auth.check('reviewer') ? ['Completed', 'Redo', 'Approved'] : ['Completed']"
+                    :items="$auth.check('reviewer') ? ['Redo', 'Approved'] : ['Completed']"
                     :disabled="$auth.check('analyst') && !!selecteditem.APPROVED"
                     v-model="form.STATUS"
-                    label="Status"
+                    label="Update Status"
                     ></v-select>
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" flat @click.native="close">Cancel</v-btn>
