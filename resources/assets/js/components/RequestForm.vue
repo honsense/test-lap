@@ -23,61 +23,75 @@
                 <v-card-text>
                     <v-container grid-list-md>
                         <v-layout wrap>
-                            <v-flex xs12 sm6 md4>
-                                <v-text-field v-model="form.REFERENCE" label="Reference"></v-text-field>
-                            </v-flex>
-                            <v-flex xs12 sm6 md4>
-                                <v-text-field v-model="form.COMMENTS" label="Comments"></v-text-field>
-                            </v-flex>
-                            <v-flex xs12 sm6 md4>
-                                <v-text-field v-model="form.METHOD" label="Method"></v-text-field>
-                            </v-flex>
-                            <v-flex xs12 sm6 md4>
-                                <v-select
-                                    multiple
-                                    chips
-                                    :items="sampleTypes"
-                                    v-model="SAMPLE_TYPE"
-                                    label="Sample Type(s)"
-                                    ></v-select>
-                            </v-flex>
-                            <v-flex xs12 sm6 md4>
-                                <v-text-field v-if="form.PRNUMBER != null || SAMPLE_TYPE.indexOf('Event Related') > -1" v-model="form.PRNUMBER" label="PR #"></v-text-field>
-                            </v-flex>
-                            <v-flex xs12 sm6 md4>
-                                <v-select
-                                    :disabled="!$auth.check('reviewer'|'admin')"
-                                    :items="users"
-                                    v-model="form.ASSIGNED_REVIEWER"
-                                    label="Assigned Reviewer"
-                                    ></v-select>
-                            </v-flex>
-                            <v-flex xs12 sm6 md4>
-                                <v-menu
-                                    ref="menu"
-                                    :close-on-content-click="false"
-                                    v-model="menu"
-                                    :return-value.sync="form.DATE_DUE"
-                                    lazy
-                                    transition="scale-transition"
-                                    offset-y
-                                >
-                                    <v-text-field
-                                        slot="activator"
-                                        v-model="form.DATE_DUE"
-                                        label="Due Date"
-                                    ></v-text-field>
-                                    <v-date-picker v-model="form.DATE_DUE" @input="$refs.menu.save(form.DATE_DUE)"></v-date-picker>
-                                </v-menu>
-                            </v-flex>
+                            <!-- <v-form :disabled="selecteditem.APPROVED"> -->
+                                <v-flex xs12 sm6 md4>
+                                    <v-text-field v-model="form.REFERENCE" label="Reference" :disabled="form.STATUS=='Approved'"></v-text-field>
+                                </v-flex>
+                                <v-flex xs12 sm6 md4>
+                                    <v-text-field v-model="form.COMMENTS" label="Comments" :disabled="form.STATUS=='Approved'"></v-text-field>
+                                </v-flex>
+                                <v-flex xs12 sm6 md4>
+                                    <v-text-field v-model="form.METHOD" label="Method" :disabled="form.STATUS=='Approved'"></v-text-field>
+                                </v-flex>
+                                <v-flex xs12 sm6 md4>
+                                    <v-select
+                                        multiple
+                                        chips
+                                        :items="sampleTypes"
+                                        v-model="SAMPLE_TYPE"
+                                        label="Sample Type(s)"
+                                        :disabled="form.STATUS=='Approved'"
+                                        ></v-select>
+                                </v-flex>
+                                <v-flex xs12 sm6 md4>
+                                    <v-text-field v-if="form.PRNUMBER != null || SAMPLE_TYPE.indexOf('Event Related') > -1" v-model="form.PRNUMBER" label="PR #"
+                                        :disabled="form.STATUS=='Approved'"></v-text-field>
+                                </v-flex>
+                                <v-flex xs12 sm6 md4>
+                                    <v-select
+                                        :disabled="!$auth.check('reviewer') || form.STATUS=='Approved'"
+                                        :items="users"
+                                        v-model="form.ASSIGNED_REVIEWER"
+                                        label="Assigned Reviewer"
+                                        ></v-select>
+                                </v-flex>
+                                <v-flex xs12 sm6 md4>
+                                    <v-menu
+                                        ref="menu"
+                                        :close-on-content-click="false"
+                                        v-model="menu"
+                                        :return-value.sync="form.DATE_DUE"
+                                        lazy
+                                        transition="scale-transition"
+                                        offset-y
+                                        :disabled="form.STATUS=='Approved'"
+                                    >
+                                        <v-text-field
+                                            slot="activator"
+                                            v-model="form.DATE_DUE"
+                                            label="Due Date"
+                                        ></v-text-field>
+                                        <v-date-picker v-model="form.DATE_DUE" @input="$refs.menu.save(form.DATE_DUE)"></v-date-picker>
+                                    </v-menu>
+                                </v-flex>
+                            <!-- </v-form> -->
                         </v-layout>
                     </v-container>
                 </v-card-text>
+                <v-divider></v-divider>
                 <v-card-actions>
-                    <v-btn color="blue darken-1" flat :disabled="!!selecteditem.APPROVED" @click="approveRequest">Approve</v-btn>
+
+                    <!-- <v-btn color="blue darken-1" flat :disabled="!!selecteditem.APPROVED" @click="approveRequest">Approve</v-btn> -->
+                    <v-select
+                    v-if="title != 'New'"
+                    :items="$auth.check('reviewer') ? ['Completed', 'Redo', 'Approved'] : ['Completed']"
+                    :disabled="$auth.check('analyst') && !!selecteditem.APPROVED"
+                    v-model="form.STATUS"
+                    label="Status"
+                    ></v-select>
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" flat @click.native="close">Cancel</v-btn>
-                    <v-btn color="blue darken-1" flat @click.native="postData" :disabled="!!this.selecteditem.APPROVED">Save</v-btn>
+                    <v-btn color="blue darken-1" flat @click.native="postData" :disabled="form.STATUS=='Approved' && !!selecteditem.APPROVED">Save</v-btn>
                 </v-card-actions>
             </v-card>
         </v-tab-item>
@@ -121,8 +135,8 @@
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" flat @click.native="close">Close</v-btn>
-                    <v-btn v-if="!filteredSelected.length && $auth.check('reviewer'|'admin')" color="blue darken-1" flat @click.native="newObservation" :disabled="!!this.selecteditem.APPROVED">Add Observation</v-btn>
-                    <v-btn v-else-if="!!filteredSelected.length && $auth.check('reviewer'|'admin')" color="blue darken-1" flat @click.native="approveObs">Approve Observation{{filteredSelected.length>1 ? 's' : ''}}</v-btn>
+                    <v-btn v-if="!filteredSelected.length && $auth.check('reviewer')" color="blue darken-1" flat @click.native="newObservation" :disabled="!!this.selecteditem.APPROVED">Add Observation</v-btn>
+                    <v-btn v-else-if="!!filteredSelected.length && $auth.check('reviewer')" color="blue darken-1" flat @click.native="approveObs">Approve Observation{{filteredSelected.length>1 ? 's' : ''}}</v-btn>
                 </v-card-actions>
             </v-card>
         </v-tab-item>
@@ -167,6 +181,7 @@ export default {
             form: {
                 mode: '',
                 DATE_DUE: null,
+                STATUS: 'Completed',
             },
             SAMPLE_TYPE: null,
             selected: [],            
@@ -199,6 +214,17 @@ export default {
             else{
                 this.form.SAMPLE_TYPE = null;
             }
+
+            if(this.form.STATUS == 'Approved'){
+                for (var x in this.observations){
+                    if (!this.observations[x].APPROVED){
+                        alert('Please approve all observations prior to approving the record!');
+                        return;
+                    }
+                }
+            }
+
+            this.approveRequest();
             var app = this
             // app.progress=true;
             this.$http.post(
@@ -259,13 +285,14 @@ export default {
             this.$http.post(
                 "approveRequest", this.selecteditem
             )
-            .then(status => 
-                {
-                    if(status.status = 200){
-                        this.$emit('refresh');
-                        this.$emit('update:dialog', false);
-                    }
-                }
+            .then(
+                // status => 
+                // {
+                //     if(status.status = 200){
+                //         this.$emit('refresh');
+                //         this.$emit('update:dialog', false);
+                //     }
+                // }
             )
             .catch(e =>
             {
@@ -290,7 +317,7 @@ export default {
             return this.selected.filter(item => {
                 return !item.APPROVED
             });
-        }
+        },
     },
     created() {
         this.refresh();

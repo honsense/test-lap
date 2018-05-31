@@ -17,7 +17,7 @@ class TestController extends Controller
             DB::table('requests')->insert([
                 ['reference' => $request->REFERENCE, 'requester' => $user->username, 'comments' => $request->COMMENTS, 'method' => $request->METHOD, 
                 'sample_type' => $request->SAMPLE_TYPE, 'prnumber' => $request->PRNUMBER, 'assigned_reviewer' => $request->ASSIGNED_REVIEWER, 'updated_by' => $user->username,
-                 'date_due' => $request->DATE_DUE]
+                 'date_due' => $request->DATE_DUE, 'status' => $request->STATUS]
             ]);
         }
         elseif ($request->mode == 'update'){
@@ -25,7 +25,8 @@ class TestController extends Controller
             DB::table('requests')
                 ->where('Id', $request->Id)
                 ->update(['reference' => $request->REFERENCE, 'comments' => $request->COMMENTS, 'method' => $request->METHOD, 'sample_type' => $request->SAMPLE_TYPE,
-                'prnumber' => $request->PRNUMBER, 'assigned_reviewer' => $request->ASSIGNED_REVIEWER, 'updated_by' => $user->username, 'date_due' => $request->DATE_DUE]);
+                'prnumber' => $request->PRNUMBER, 'assigned_reviewer' => $request->ASSIGNED_REVIEWER, 'updated_by' => $user->username, 'date_due' => $request->DATE_DUE,
+                'status' => $request->STATUS]);
         }
         // $postdata = $request;
         return response($request);

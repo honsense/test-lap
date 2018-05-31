@@ -1,19 +1,39 @@
 <template>
     <div>
-        <div class="alert alert-danger" v-if="error">
-            <p>There was an error, unable to sign in with those credentials.</p>
-        </div>
-        <form autocomplete="off" @submit.prevent="login">
-            <div class="form-group">
-                <label for="email">E-mail</label>
-                <input type="email" id="email" class="form-control" placeholder="user@example.com" v-model="email" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" class="form-control" v-model="password" required>
-            </div>
-            <button type="submit" class="btn btn-default">Sign in</button>
-        </form>
+        <v-container grid-list-md>
+            <v-layout >
+                <v-flex xs10 offset-xs1>
+                    <v-jumbotron>
+                        <div class="alert alert-danger" v-if="error">
+                            <p>There was an error, unable to sign in with those credentials.</p>
+                        </div>
+                        <v-form ref="form" lazy-validation v-model="valid" >
+                            <v-text-field 
+                            v-model="username" 
+                            label="Username" 
+                            required
+                            :rules="[v => !!v || 'username is required!']"
+                            ></v-text-field>
+
+                            <v-text-field 
+                            v-model="password" 
+                            label="password" 
+                            :type="'password'" 
+                            required
+                            :rules="[v => !!v || 'password is required!']"
+                            ></v-text-field>
+
+                            <v-btn 
+                            @click="login"
+                            :disabled="!valid"
+                            large class="mx-0" 
+                            color="primary"
+                            >Login</v-btn>
+                        </v-form>
+                    </v-jumbotron>
+                </v-flex>
+            </v-layout>
+        </v-container>
     </div>
 </template>
 
@@ -21,9 +41,10 @@
     export default {
         data(){
             return {
-                email: null,
-                password: null,
-                error: false
+                username: '',
+                password: '',
+                error: false,
+                valid: true,
             }
         },
 
@@ -32,20 +53,23 @@
 
         methods: {
             login(){
-                var app = this
-                this.$auth.login({
-                    params: {
-                        email: app.email,
-                        password: app.password
-                    }, 
-                    success: function () {},
-                    error: function (resp) {
-                        alert(resp.response.data.msg)
-                    },
-                    rememberMe: true,
-                    redirect: '/dashboard',
-                    fetchUser: true,
-                });             
+                if (this.$refs.form.validate()){
+                    var app = this
+                    this.$auth.login({
+                        params: {
+                            username: app.username,
+                            password: app.password
+                        }, 
+                        success: function () {},
+                        error: function (resp) {
+                            this.error = true;
+                            // alert(resp.response.data.msg)
+                        },
+                        rememberMe: true,
+                        redirect: '/dashboard',
+                        fetchUser: true,
+                    });
+                }
             },
         }
     }   
