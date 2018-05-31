@@ -24312,7 +24312,7 @@ exports = module.exports = __webpack_require__(98)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* .app{\n    margin-top: 60px;\n    margin-left: 30px;\n    margin-right: 30px;\n    margin-bottom: 60px; \n} */\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* .app{\n    margin-top: 60px;\n    margin-left: 30px;\n    margin-right: 30px;\n    margin-bottom: 60px; \n} */\n", ""]);
 
 // exports
 
@@ -24579,6 +24579,20 @@ module.exports = function listToStyles (parentId, list) {
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__RequestForm__ = __webpack_require__(369);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__RequestForm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__RequestForm__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -26156,6 +26170,62 @@ var render = function() {
                                     _vm._s(_vm.search) +
                                     " were found"
                                 )
+                              ]),
+                              _vm._v(" "),
+                              _c("v-divider", { staticClass: "my-3" }),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "title mb-3" }, [
+                                _vm._v("Create a new record below")
+                              ]),
+                              _vm._v(" "),
+                              _c(
+                                "v-btn",
+                                {
+                                  attrs: { color: "primary", dark: "" },
+                                  on: { click: _vm.newRequest }
+                                },
+                                [_vm._v("New Request")]
+                              )
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c("v-flex")
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "template",
+                { attrs: { value: true }, slot: "no-data" },
+                [
+                  _c(
+                    "v-container",
+                    {
+                      attrs: {
+                        fluid: "",
+                        "grid-list-xl": "",
+                        "fill-height": ""
+                      }
+                    },
+                    [
+                      _c(
+                        "v-layout",
+                        { attrs: { row: "", "justify-space-between": "" } },
+                        [
+                          _c("v-flex"),
+                          _vm._v(" "),
+                          _c(
+                            "v-flex",
+                            [
+                              _c("h3", { staticClass: "display-3" }, [
+                                _vm._v("No records found")
                               ]),
                               _vm._v(" "),
                               _c("v-divider", { staticClass: "my-3" }),
