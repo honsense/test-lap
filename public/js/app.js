@@ -24312,7 +24312,7 @@ exports = module.exports = __webpack_require__(98)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* .app{\n    margin-top: 60px;\n    margin-left: 30px;\n    margin-right: 30px;\n    margin-bottom: 60px; \n} */\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* .app{\n    margin-top: 60px;\n    margin-left: 30px;\n    margin-right: 30px;\n    margin-bottom: 60px; \n} */\n", ""]);
 
 // exports
 
@@ -24650,6 +24650,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 
 
@@ -24674,7 +24676,7 @@ var searchByRef = function searchByRef(items, term) {
     data: function data() {
         return {
             dialog: false,
-            headers: [{ text: 'Reference', value: 'REFERENCE' }, { text: 'Requester', value: 'REQUESTER' }, { text: 'Comments', value: 'COMMENTS' }, { text: 'Method', value: 'METHOD' }, { text: 'Date Requested', value: 'DATE_REQUESTED' }],
+            headers: [{ text: 'Reference', value: 'REFERENCE' }, { text: 'Requester', value: 'REQUESTER' }, { text: 'Comments', value: 'COMMENTS' }, { text: 'Method', value: 'METHOD' }, { text: 'Date Requested', value: 'DATE_REQUESTED' }, { text: 'Date Due', value: 'DATE_DUE' }, { text: 'Assigned Reviewer', value: 'ASSIGNED_REVIEWER' }],
             sources: [],
             progress: true,
             search: null,
@@ -25489,7 +25491,7 @@ var render = function() {
                                 [
                                   _c(
                                     "v-flex",
-                                    { attrs: { xs12: "", sm6: "", md4: "" } },
+                                    { attrs: { xs12: "" } },
                                     [
                                       _c("v-text-field", {
                                         attrs: {
@@ -25511,7 +25513,7 @@ var render = function() {
                                   _vm._v(" "),
                                   _c(
                                     "v-flex",
-                                    { attrs: { xs12: "", sm6: "", md4: "" } },
+                                    { attrs: { xs12: "" } },
                                     [
                                       _c("v-text-field", {
                                         attrs: {
@@ -25533,7 +25535,7 @@ var render = function() {
                                   _vm._v(" "),
                                   _c(
                                     "v-flex",
-                                    { attrs: { xs12: "", sm6: "", md4: "" } },
+                                    { attrs: { xs12: "" } },
                                     [
                                       _c("v-text-field", {
                                         attrs: {
@@ -25555,7 +25557,7 @@ var render = function() {
                                   _vm._v(" "),
                                   _c(
                                     "v-flex",
-                                    { attrs: { xs12: "", sm6: "", md4: "" } },
+                                    { attrs: { xs12: "" } },
                                     [
                                       _c("v-select", {
                                         attrs: {
@@ -25580,7 +25582,7 @@ var render = function() {
                                   _vm._v(" "),
                                   _c(
                                     "v-flex",
-                                    { attrs: { xs12: "", sm6: "", md4: "" } },
+                                    { attrs: { xs12: "" } },
                                     [
                                       _vm.form.PRNUMBER != null ||
                                       _vm.SAMPLE_TYPE.indexOf("Event Related") >
@@ -25610,35 +25612,7 @@ var render = function() {
                                   _vm._v(" "),
                                   _c(
                                     "v-flex",
-                                    { attrs: { xs12: "", sm6: "", md4: "" } },
-                                    [
-                                      _c("v-select", {
-                                        attrs: {
-                                          disabled:
-                                            !_vm.$auth.check("reviewer") ||
-                                            _vm.form.STATUS == "Approved",
-                                          items: _vm.users,
-                                          label: "Assigned Reviewer"
-                                        },
-                                        model: {
-                                          value: _vm.form.ASSIGNED_REVIEWER,
-                                          callback: function($$v) {
-                                            _vm.$set(
-                                              _vm.form,
-                                              "ASSIGNED_REVIEWER",
-                                              $$v
-                                            )
-                                          },
-                                          expression: "form.ASSIGNED_REVIEWER"
-                                        }
-                                      })
-                                    ],
-                                    1
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "v-flex",
-                                    { attrs: { xs12: "", sm6: "", md4: "" } },
+                                    { attrs: { xs6: "" } },
                                     [
                                       _c(
                                         "v-menu",
@@ -25717,6 +25691,34 @@ var render = function() {
                                       )
                                     ],
                                     1
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "v-flex",
+                                    { attrs: { xs6: "" } },
+                                    [
+                                      _c("v-select", {
+                                        attrs: {
+                                          disabled:
+                                            !_vm.$auth.check("reviewer") ||
+                                            _vm.form.STATUS == "Approved",
+                                          items: _vm.users,
+                                          label: "Assigned Reviewer"
+                                        },
+                                        model: {
+                                          value: _vm.form.ASSIGNED_REVIEWER,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.form,
+                                              "ASSIGNED_REVIEWER",
+                                              $$v
+                                            )
+                                          },
+                                          expression: "form.ASSIGNED_REVIEWER"
+                                        }
+                                      })
+                                    ],
+                                    1
                                   )
                                 ],
                                 1
@@ -25736,7 +25738,8 @@ var render = function() {
                           class: [
                             _vm.selecteditem.STATUS == "Approved"
                               ? "alert-success"
-                              : "alert-danger"
+                              : "alert-danger",
+                            "px-2"
                           ]
                         },
                         [
@@ -26128,7 +26131,13 @@ var render = function() {
                           _vm._v(" "),
                           _c("td", [_vm._v(_vm._s(props.item.METHOD))]),
                           _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(props.item.DATE_REQUESTED))])
+                          _c("td", [_vm._v(_vm._s(props.item.DATE_REQUESTED))]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(props.item.DATE_DUE))]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(_vm._s(props.item.ASSIGNED_REVIEWER))
+                          ])
                         ]
                       )
                     ]

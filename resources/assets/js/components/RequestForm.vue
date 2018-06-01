@@ -24,16 +24,16 @@
                     <v-container grid-list-md>
                         <v-layout wrap>
                             <!-- <v-form :disabled="selecteditem.APPROVED"> -->
-                                <v-flex xs12 sm6 md4>
+                                <v-flex xs12>
                                     <v-text-field v-model="form.REFERENCE" label="Reference" :disabled="form.STATUS=='Approved'"></v-text-field>
                                 </v-flex>
-                                <v-flex xs12 sm6 md4>
+                                <v-flex xs12>
                                     <v-text-field v-model="form.COMMENTS" label="Comments" :disabled="form.STATUS=='Approved'"></v-text-field>
                                 </v-flex>
-                                <v-flex xs12 sm6 md4>
+                                <v-flex xs12>
                                     <v-text-field v-model="form.METHOD" label="Method" :disabled="form.STATUS=='Approved'"></v-text-field>
                                 </v-flex>
-                                <v-flex xs12 sm6 md4>
+                                <v-flex xs12>
                                     <v-select
                                         multiple
                                         chips
@@ -43,19 +43,11 @@
                                         :disabled="form.STATUS=='Approved'"
                                         ></v-select>
                                 </v-flex>
-                                <v-flex xs12 sm6 md4>
+                                <v-flex xs12>
                                     <v-text-field v-if="form.PRNUMBER != null || SAMPLE_TYPE.indexOf('Event Related') > -1" v-model="form.PRNUMBER" label="PR #"
                                         :disabled="form.STATUS=='Approved'"></v-text-field>
-                                </v-flex>
-                                <v-flex xs12 sm6 md4>
-                                    <v-select
-                                        :disabled="!$auth.check('reviewer') || form.STATUS=='Approved'"
-                                        :items="users"
-                                        v-model="form.ASSIGNED_REVIEWER"
-                                        label="Assigned Reviewer"
-                                        ></v-select>
-                                </v-flex>
-                                <v-flex xs12 sm6 md4>
+                                </v-flex>                                
+                                <v-flex xs6>
                                     <v-menu
                                         ref="menu"
                                         :close-on-content-click="false"
@@ -74,12 +66,20 @@
                                         <v-date-picker v-model="form.DATE_DUE" @input="$refs.menu.save(form.DATE_DUE)"></v-date-picker>
                                     </v-menu>
                                 </v-flex>
+                                <v-flex xs6>
+                                    <v-select
+                                        :disabled="!$auth.check('reviewer') || form.STATUS=='Approved'"
+                                        :items="users"
+                                        v-model="form.ASSIGNED_REVIEWER"
+                                        label="Assigned Reviewer"
+                                        ></v-select>
+                                </v-flex>                                
                             <!-- </v-form> -->
                         </v-layout>
                     </v-container>
                 </v-card-text>
                 <v-divider></v-divider>
-                <div v-bind:class="[ selecteditem.STATUS == 'Approved' ? 'alert-success' : 'alert-danger']">
+                <div v-bind:class="[ selecteditem.STATUS == 'Approved' ? 'alert-success' : 'alert-danger', 'px-2']">
                     <p>Current status: {{ selecteditem.STATUS }}</p>
                 </div>
                 <v-card-actions>

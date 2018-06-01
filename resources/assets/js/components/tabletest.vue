@@ -32,6 +32,8 @@
       <td>{{ props.item.COMMENTS }}</td>
       <td>{{ props.item.METHOD }}</td>
       <td>{{ props.item.DATE_REQUESTED }}</td>
+      <td>{{ props.item.DATE_DUE }}</td>
+      <td>{{ props.item.ASSIGNED_REVIEWER }}</td>
     </tr>
     </template>
     <template slot="no-results" :value="true">
@@ -97,6 +99,8 @@ export default {
                 {text: 'Comments', value: 'COMMENTS'},
                 {text: 'Method', value: 'METHOD'},
                 {text: 'Date Requested', value: 'DATE_REQUESTED'},
+                {text: 'Date Due', value: 'DATE_DUE'},
+                {text: 'Assigned Reviewer', value: 'ASSIGNED_REVIEWER'},
             ], 
             sources: [],
             progress: true,
