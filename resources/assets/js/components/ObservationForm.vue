@@ -15,16 +15,16 @@
             <v-card-text>
                 <v-container grid-list-md>
                     <v-layout wrap>
-                        <v-flex xs12 sm6 md4>
+                        <v-flex xs12>
                             <v-text-field :value="form.REFERENCE" label="Reference" disabled></v-text-field>
                         </v-flex>
-                        <v-flex xs12 sm6 md4>
-                            <v-text-field v-model="form.OBSERVATION" label="Observation" :disabled="!$auth.check('reviewer')"></v-text-field>
+                        <v-flex xs12>
+                            <v-text-field multi-line auto-grow :counter="255" v-model="form.OBSERVATION" label="Observation" :disabled="!$auth.check('reviewer')"></v-text-field>
                         </v-flex>
-                        <v-flex xs12 sm6 md4>
-                            <v-text-field v-model="form.ACTIONS" label="Action" :disabled="!$auth.check('reviewer')"></v-text-field>
+                        <v-flex xs12>
+                            <v-text-field multi-line auto-grow :counter="255" v-model="form.ACTIONS" label="Action" :disabled="!$auth.check('reviewer')"></v-text-field>
                         </v-flex>
-                        <v-flex xs12 sm6 md4>
+                        <v-flex xs12>
                             <v-select
                                 :items="['Minor', 'Major', 'Critical']"
                                 :disabled="$auth.check('analyst')"
@@ -32,7 +32,7 @@
                                 label="Criticality"
                             ></v-select>
                         </v-flex>
-                        <v-flex xs12 sm6 md4>
+                        <v-flex xs12>
                             <v-text-field v-if="title != 'New'" v-model="form.RESPONSE" label="Response"></v-text-field>
                         </v-flex>
                     </v-layout>

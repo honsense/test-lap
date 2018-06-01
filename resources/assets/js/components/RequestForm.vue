@@ -2,7 +2,7 @@
   <div>
     <v-dialog 
         :value="dialog"
-        max-width="700px"
+        max-width="1000px"
         persistent
         lazy
     >
@@ -122,6 +122,7 @@
                                 <td>{{ props.item.REFERENCE }}</td>
                                 <td>{{ props.item.OBSERVATION }}</td>
                                 <td>{{ props.item.ACTIONS }}</td>
+                                <td>{{ props.item.CRITICALITY }}</td>
                                 <td>{{ props.item.RESPONSE }}</td>
                                 <td class="justify-center layout px-0">
                                     <v-btn v-if="!props.item.APPROVED" icon class="mx-0" @click.native="editObservation(props.item)">
@@ -175,6 +176,7 @@ export default {
                 {text: 'Reference', value: 'REFERENCE'},
                 {text: 'Observation', value: 'OBSERVATION'},
                 {text: 'Actions', value: 'ACTIONS'},
+                {text: 'Criticality', value: 'CRITICALITY'},
                 {text: 'Response', value: 'RESPONSE'},
                 {text: 'Edit', value: 'Id', sortable: false},
             ],

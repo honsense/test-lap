@@ -24937,6 +24937,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -24948,7 +24949,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             observations: [],
             sampleTypes: ['In Process', 'Raw Material', 'Finished Product', 'Stability', 'Surveillance', 'Utilities', 'Instrumentation', 'Training', 'Validation', 'Preparation', 'CTL', 'Event Related'],
-            headers: [{ text: 'Reference', value: 'REFERENCE' }, { text: 'Observation', value: 'OBSERVATION' }, { text: 'Actions', value: 'ACTIONS' }, { text: 'Response', value: 'RESPONSE' }, { text: 'Edit', value: 'Id', sortable: false }],
+            headers: [{ text: 'Reference', value: 'REFERENCE' }, { text: 'Observation', value: 'OBSERVATION' }, { text: 'Actions', value: 'ACTIONS' }, { text: 'Criticality', value: 'CRITICALITY' }, { text: 'Response', value: 'RESPONSE' }, { text: 'Edit', value: 'Id', sortable: false }],
             showObsForm: false,
             form: {
                 mode: '',
@@ -25277,7 +25278,7 @@ var render = function() {
                         [
                           _c(
                             "v-flex",
-                            { attrs: { xs12: "", sm6: "", md4: "" } },
+                            { attrs: { xs12: "" } },
                             [
                               _c("v-text-field", {
                                 attrs: {
@@ -25292,10 +25293,13 @@ var render = function() {
                           _vm._v(" "),
                           _c(
                             "v-flex",
-                            { attrs: { xs12: "", sm6: "", md4: "" } },
+                            { attrs: { xs12: "" } },
                             [
                               _c("v-text-field", {
                                 attrs: {
+                                  "multi-line": "",
+                                  "auto-grow": "",
+                                  counter: 255,
                                   label: "Observation",
                                   disabled: !_vm.$auth.check("reviewer")
                                 },
@@ -25313,10 +25317,13 @@ var render = function() {
                           _vm._v(" "),
                           _c(
                             "v-flex",
-                            { attrs: { xs12: "", sm6: "", md4: "" } },
+                            { attrs: { xs12: "" } },
                             [
                               _c("v-text-field", {
                                 attrs: {
+                                  "multi-line": "",
+                                  "auto-grow": "",
+                                  counter: 255,
                                   label: "Action",
                                   disabled: !_vm.$auth.check("reviewer")
                                 },
@@ -25334,7 +25341,7 @@ var render = function() {
                           _vm._v(" "),
                           _c(
                             "v-flex",
-                            { attrs: { xs12: "", sm6: "", md4: "" } },
+                            { attrs: { xs12: "" } },
                             [
                               _c("v-select", {
                                 attrs: {
@@ -25356,7 +25363,7 @@ var render = function() {
                           _vm._v(" "),
                           _c(
                             "v-flex",
-                            { attrs: { xs12: "", sm6: "", md4: "" } },
+                            { attrs: { xs12: "" } },
                             [
                               _vm.title != "New"
                                 ? _c("v-text-field", {
@@ -25452,7 +25459,7 @@ var render = function() {
         {
           attrs: {
             value: _vm.dialog,
-            "max-width": "700px",
+            "max-width": "1000px",
             persistent: "",
             lazy: ""
           }
@@ -25875,6 +25882,10 @@ var render = function() {
                                     _vm._v(" "),
                                     _c("td", [
                                       _vm._v(_vm._s(props.item.ACTIONS))
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("td", [
+                                      _vm._v(_vm._s(props.item.CRITICALITY))
                                     ]),
                                     _vm._v(" "),
                                     _c("td", [
