@@ -17,12 +17,13 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 
-Route::post('auth/register', 'AuthController@register');
 Route::post('auth/login', 'AuthController@login');
-Route::get('getrequests', 'AuthController@getrequests');
-Route::get('getselectedrequest', 'AuthController@getselectedrequest');
-Route::get('getobservations', 'AuthController@getobservations');
+
 Route::group(['middleware' => 'jwt.auth'], function(){
+	Route::post('auth/register', 'AuthController@register');
+	Route::get('getrequests', 'AuthController@getrequests');
+	Route::get('getselectedrequest', 'AuthController@getselectedrequest');
+	Route::get('getobservations', 'AuthController@getobservations');
 	Route::post('changePass', 'AuthController@changePass');
 	Route::post('passwordReset', 'AuthController@passwordReset');
 	Route::post('test', 'TestController@test');

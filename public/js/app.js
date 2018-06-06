@@ -24087,31 +24087,31 @@ var render = function() {
             { staticClass: "hidden-sm-and-down" },
             [
               _vm.$auth.check()
-                ? _c("v-btn", { attrs: { to: "dashboard", flat: "" } }, [
+                ? _c("v-btn", { attrs: { to: "/dashboard", flat: "" } }, [
                     _vm._v("Home")
                   ])
                 : _vm._e(),
               _vm._v(" "),
               _vm.$auth.check("admin")
-                ? _c("v-btn", { attrs: { to: "admin", flat: "" } }, [
+                ? _c("v-btn", { attrs: { to: "/admin", flat: "" } }, [
                     _vm._v("Admin Home")
                   ])
                 : _vm._e(),
               _vm._v(" "),
               !_vm.$auth.check()
-                ? _c("v-btn", { attrs: { to: "login", flat: "" } }, [
+                ? _c("v-btn", { attrs: { to: "/login", flat: "" } }, [
                     _vm._v("Login")
                   ])
                 : _vm._e(),
               _vm._v(" "),
               _vm.$auth.check("admin")
-                ? _c("v-btn", { attrs: { to: "register", flat: "" } }, [
+                ? _c("v-btn", { attrs: { to: "/register", flat: "" } }, [
                     _vm._v("Register")
                   ])
                 : _vm._e(),
               _vm._v(" "),
               _vm.$auth.check()
-                ? _c("v-btn", { attrs: { to: "passwordchange", flat: "" } }, [
+                ? _c("v-btn", { attrs: { to: "/passwordchange", flat: "" } }, [
                     _vm._v("Change Password")
                   ])
                 : _vm._e(),
