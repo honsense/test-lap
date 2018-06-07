@@ -16,24 +16,24 @@
                 <v-container grid-list-md>
                     <v-layout wrap>
                         <v-flex xs12>
-                            <v-text-field :value="form.REFERENCE" label="Reference" disabled></v-text-field>
+                            <v-text-field :value="form.reference" label="Reference" disabled></v-text-field>
                         </v-flex>
                         <v-flex xs12>
-                            <v-text-field multi-line auto-grow :counter="255" v-model="form.OBSERVATION" label="Observation" :disabled="!$auth.check('reviewer')"></v-text-field>
+                            <v-text-field multi-line auto-grow v-model="form.observation" label="Observation" :disabled="!$auth.check('reviewer')"></v-text-field>
                         </v-flex>
                         <v-flex xs12>
-                            <v-text-field multi-line auto-grow :counter="255" v-model="form.ACTIONS" label="Action" :disabled="!$auth.check('reviewer')"></v-text-field>
+                            <v-text-field multi-line auto-grow v-model="form.actions" label="Action" :disabled="!$auth.check('reviewer')"></v-text-field>
                         </v-flex>
                         <v-flex xs12>
                             <v-select
                                 :items="['Minor', 'Major', 'Critical']"
                                 :disabled="$auth.check('analyst')"
-                                v-model="form.CRITICALITY"
+                                v-model="form.criticality"
                                 label="Criticality"
                             ></v-select>
                         </v-flex>
                         <v-flex xs12>
-                            <v-text-field v-if="title != 'New'" v-model="form.RESPONSE" label="Response"></v-text-field>
+                            <v-text-field v-if="title != 'New'" v-model="form.response" label="Response"></v-text-field>
                         </v-flex>
                     </v-layout>
                 </v-container>
@@ -86,7 +86,7 @@ export default {
     },
     computed:{
         title: function () {
-            if (this.observation.Id){
+            if (this.observation.id){
                 this.form.mode = 'update';
                 return "Edit"
             }

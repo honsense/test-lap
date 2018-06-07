@@ -5539,8 +5539,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-// import router from './router';
-// import VueResource from 'vue-resource';
+
 
 
 
@@ -5549,16 +5548,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_13_vuetify___default.a);
-
-// import VueMaterial from 'vue-material';
-// import 'vue-material/dist/vue-material.css';
-// import 'vue-material/dist/theme/default.css';
-
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]);
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_11_vue_axios___default.a, __WEBPACK_IMPORTED_MODULE_10_axios___default.a);
 __WEBPACK_IMPORTED_MODULE_10_axios___default.a.defaults.baseURL = '/api/';
-
-// Vue.use(VueMaterial);
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.config.productionTip = false;
 
 // export default new Router({
@@ -5616,71 +5608,6 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__webpack_require__(422), {
 __WEBPACK_IMPORTED_MODULE_3__App_vue___default.a.router = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.router;
 
 new __WEBPACK_IMPORTED_MODULE_0_vue___default.a(__WEBPACK_IMPORTED_MODULE_3__App_vue___default.a).$mount('#app');
-
-// import Vue from 'vue';
-// import VueRouter from 'vue-router';
-// import axios from 'axios';
-// import VueAxios from 'vue-axios';
-// import App from './App.vue';
-// import Dashboard from './components/Dashboard.vue';
-// import Home from './components/Home.vue';
-// import Register from './components/Register.vue';
-// import Login from './components/Login.vue';
-
-// Vue.use(VueRouter);
-// Vue.use(VueAxios, axios);
-
-// axios.defaults.baseURL = 'http://test.test/api';
-
-// const router = new VueRouter({
-//     routes: [
-//         {
-//             path: '/',
-//             name: 'home',
-//             component: Home
-//         },
-//         {
-//             path: '/register',
-//             name: 'register',
-//             component: Register,
-//             meta: {
-//                 auth: false
-//             }
-//         },
-//         {
-//             path: '/login',
-//             name: 'login',
-//             component: Login,
-//             meta: {
-//                 auth: false
-//             }
-//         },
-//         {
-//             path: '/dashboard',
-//             name: 'dashboard',
-//             component: Dashboard,
-//             meta: {
-//                 auth: true
-//             }
-//         }
-//     ]
-// });
-
-// Vue.router = router
-
-// Vue.use(require('@websanova/vue-auth'), {
-//   auth: require('@websanova/vue-auth/drivers/auth/bearer.js'),
-//   http: require('@websanova/vue-auth/drivers/http/axios.1.x.js'),
-//   router: require('@websanova/vue-auth/drivers/router/vue-router.2.x.js'),
-// })
-
-// App.router = Vue.router
-
-// new Vue(App).$mount('#app');
-
-// export default{
-//     router
-// }
 
 /***/ }),
 /* 146 */
@@ -24676,7 +24603,7 @@ var searchByRef = function searchByRef(items, term) {
     data: function data() {
         return {
             dialog: false,
-            headers: [{ text: 'Reference', value: 'REFERENCE' }, { text: 'Requester', value: 'REQUESTER' }, { text: 'Comments', value: 'COMMENTS' }, { text: 'Method', value: 'METHOD' }, { text: 'Date Requested', value: 'DATE_REQUESTED' }, { text: 'Date Due', value: 'DATE_DUE' }, { text: 'Assigned Reviewer', value: 'ASSIGNED_REVIEWER' }],
+            headers: [{ text: 'Reference', value: 'reference' }, { text: 'Requester', value: 'requester' }, { text: 'Comments', value: 'comments' }, { text: 'Method', value: 'method' }, { text: 'Date Requested', value: 'created_at' }, { text: 'Date Due', value: 'due_on' }, { text: 'Assigned Reviewer', value: 'assigned_reviewer' }],
             sources: [],
             progress: true,
             search: null,
@@ -24692,7 +24619,7 @@ var searchByRef = function searchByRef(items, term) {
         onSelect: function onSelect(item) {
             var _this = this;
 
-            this.$http.get('/getselectedrequest', { params: { "Id": item.Id } }).then(function (res) {
+            this.$http.get('/requests/' + item.id).then(function (res) {
                 if (res.status = 200) {
                     _this.selecteditem = res.data.request;
                     _this.dialog = true;
@@ -24703,13 +24630,13 @@ var searchByRef = function searchByRef(items, term) {
         },
         newRequest: function newRequest() {
             this.dialog = true;
-            this.selecteditem = { REFERENCE: this.search }; //may just use {} instead of REFERENCE: this.search
+            this.selecteditem = { reference: this.search }; //may just use {} instead of REFERENCE: this.search
         },
         refresh: function refresh(obs) {
             var _this2 = this;
 
             this.search = null;
-            this.$http.get('/getrequests').then(function (res) {
+            this.$http.get('/requests').then(function (res) {
                 _this2.sources = res.data.requests;
                 _this2.users = res.data.users.map(function (x) {
                     return x.username;
@@ -24727,7 +24654,7 @@ var searchByRef = function searchByRef(items, term) {
             var _this3 = this;
 
             return this.sources.filter(function (item) {
-                return item.REFERENCE.match(_this3.search);
+                return item.reference.match(_this3.search);
             });
         }
     }
@@ -24938,6 +24865,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -24948,15 +24881,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             observations: [],
-            sampleTypes: ['In Process', 'Raw Material', 'Finished Product', 'Stability', 'Surveillance', 'Utilities', 'Instrumentation', 'Training', 'Validation', 'Preparation', 'CTL', 'Event Related'],
-            headers: [{ text: 'Reference', value: 'REFERENCE' }, { text: 'Observation', value: 'OBSERVATION' }, { text: 'Actions', value: 'ACTIONS' }, { text: 'Criticality', value: 'CRITICALITY' }, { text: 'Response', value: 'RESPONSE' }, { text: 'Edit', value: 'Id', sortable: false }],
+            sampleTypes: ['In Process', 'Raw Material', 'Finished Product', 'Stability', 'Surveillance', 'Utilities', 'Instrumentation', 'Training', 'Validation', 'Preparation', 'CTL', 'Test Method Transfer', 'Event Related'],
+            headers: [{ text: 'Reference', value: 'reference' }, { text: 'Observation', value: 'observation' }, { text: 'Actions', value: 'actions' }, { text: 'Criticality', value: 'criticality' }, { text: 'Response', value: 'response' }, { text: 'Edit', value: 'id', sortable: false }],
             showObsForm: false,
             form: {
                 mode: '',
-                DATE_DUE: null,
-                STATUS: 'Completed'
+                due_on: null,
+                status: 'Completed'
             },
-            SAMPLE_TYPE: null,
+            sample_type: null,
             selected: [],
             menu: false
         };
@@ -24968,15 +24901,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this = this;
 
             this.search = null;
-            this.$http.get('/getobservations', { params: { "Id": this.selecteditem.Id } }).then(function (res) {
-                _this.observations = res.data.observations;
-            });
-            // if(obs) {
-            //         this.showObsform = false;
-            //         this.showReqform = true;
-            //     }
-            // else {
-            //     this.dialog = false;
+            if (this.selecteditem.id) {
+                this.$http.get('/requests/' + this.selecteditem.id + '/observations').then(function (res) {
+                    _this.observations = res.data.observations;
+                });
+                // if(obs) {
+                //         this.showObsform = false;
+                //         this.showReqform = true;
+                //     }
+                // else {
+                //     this.dialog = false;
+            }
         },
 
         close: function close() {
@@ -24985,26 +24920,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
         postData: function postData() {
-            if (this.SAMPLE_TYPE.length > 0) {
-                this.form.SAMPLE_TYPE = JSON.stringify(this.SAMPLE_TYPE);
+            if (this.sample_type.length > 0) {
+                this.form.sample_type = JSON.stringify(this.sample_type);
             } else {
-                this.form.SAMPLE_TYPE = null;
+                this.form.sample_type = null;
             }
 
-            if (this.form.STATUS == 'Approved') {
+            if (this.form.status == 'Approved') {
                 for (var x in this.observations) {
-                    if (!this.observations[x].APPROVED) {
+                    if (!this.observations[x].approved) {
                         alert('Please approve all observations prior to approving the record!');
                         return;
                     }
                 }
-
-                this.approveRequest();
             }
 
             var app = this;
             // app.progress=true;
-            this.$http.post("test", this.form).then(function (status) {
+            this.$http.post('' + (this.selecteditem.id ? 'requests/' + ('' + this.selecteditem.id) + '/update' : 'requests/create'), this.form).then(function (status) {
                 if (status.status = 200) {
                     app.$emit('refresh');
                     app.$emit('update:dialog', false);
@@ -25016,7 +24949,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
 
         newObservation: function newObservation() {
-            this.observation = { REQUEST_ID: this.selecteditem.Id, REFERENCE: this.selecteditem.REFERENCE };
+            this.observation = { request_id: this.selecteditem.id, reference: this.selecteditem.reference };
             this.showObsForm = true;
         },
 
@@ -25032,11 +24965,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var ids = [];
 
             for (var x in this.selected) {
-                if (!this.selected[x].APPROVED) {
-                    ids.push(this.selected[x].Id);
+                if (!this.selected[x].approved) {
+                    ids.push(this.selected[x].id);
                 };
             }
-            this.$http.post("approveObs", { 'Id': ids }).then(function (status) {
+            this.$http.post("approveObs", { 'id': ids }).then(function (status) {
                 if (status.status = 200) {
                     _this2.refresh();
                     _this2.selected = [];
@@ -25055,7 +24988,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     computed: {
         title: function title() {
-            if (this.selecteditem.Id) {
+            if (this.selecteditem.id) {
                 this.form.mode = 'update';
                 return "Edit";
             } else {
@@ -25066,17 +24999,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         filteredSelected: function filteredSelected() {
             return this.selected.filter(function (item) {
-                return !item.APPROVED;
+                return !item.approved;
             });
         }
     },
     created: function created() {
         this.refresh();
         Object.assign(this.form, this.selecteditem);
-        if (this.form.SAMPLE_TYPE) {
-            this.SAMPLE_TYPE = JSON.parse(this.form.SAMPLE_TYPE);
+        if (this.form.sample_type) {
+            this.sample_type = JSON.parse(this.form.sample_type);
         } else {
-            this.SAMPLE_TYPE = [];
+            this.sample_type = [];
         }
     }
 });
@@ -25217,7 +25150,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     computed: {
         title: function title() {
-            if (this.observation.Id) {
+            if (this.observation.id) {
                 this.form.mode = 'update';
                 return "Edit";
             } else {
@@ -25282,7 +25215,7 @@ var render = function() {
                             [
                               _c("v-text-field", {
                                 attrs: {
-                                  value: _vm.form.REFERENCE,
+                                  value: _vm.form.reference,
                                   label: "Reference",
                                   disabled: ""
                                 }
@@ -25299,16 +25232,15 @@ var render = function() {
                                 attrs: {
                                   "multi-line": "",
                                   "auto-grow": "",
-                                  counter: 255,
                                   label: "Observation",
                                   disabled: !_vm.$auth.check("reviewer")
                                 },
                                 model: {
-                                  value: _vm.form.OBSERVATION,
+                                  value: _vm.form.observation,
                                   callback: function($$v) {
-                                    _vm.$set(_vm.form, "OBSERVATION", $$v)
+                                    _vm.$set(_vm.form, "observation", $$v)
                                   },
-                                  expression: "form.OBSERVATION"
+                                  expression: "form.observation"
                                 }
                               })
                             ],
@@ -25323,16 +25255,15 @@ var render = function() {
                                 attrs: {
                                   "multi-line": "",
                                   "auto-grow": "",
-                                  counter: 255,
                                   label: "Action",
                                   disabled: !_vm.$auth.check("reviewer")
                                 },
                                 model: {
-                                  value: _vm.form.ACTIONS,
+                                  value: _vm.form.actions,
                                   callback: function($$v) {
-                                    _vm.$set(_vm.form, "ACTIONS", $$v)
+                                    _vm.$set(_vm.form, "actions", $$v)
                                   },
-                                  expression: "form.ACTIONS"
+                                  expression: "form.actions"
                                 }
                               })
                             ],
@@ -25350,11 +25281,11 @@ var render = function() {
                                   label: "Criticality"
                                 },
                                 model: {
-                                  value: _vm.form.CRITICALITY,
+                                  value: _vm.form.criticality,
                                   callback: function($$v) {
-                                    _vm.$set(_vm.form, "CRITICALITY", $$v)
+                                    _vm.$set(_vm.form, "criticality", $$v)
                                   },
-                                  expression: "form.CRITICALITY"
+                                  expression: "form.criticality"
                                 }
                               })
                             ],
@@ -25369,11 +25300,11 @@ var render = function() {
                                 ? _c("v-text-field", {
                                     attrs: { label: "Response" },
                                     model: {
-                                      value: _vm.form.RESPONSE,
+                                      value: _vm.form.response,
                                       callback: function($$v) {
-                                        _vm.$set(_vm.form, "RESPONSE", $$v)
+                                        _vm.$set(_vm.form, "response", $$v)
                                       },
-                                      expression: "form.RESPONSE"
+                                      expression: "form.response"
                                     }
                                   })
                                 : _vm._e()
@@ -25498,20 +25429,43 @@ var render = function() {
                                 [
                                   _c(
                                     "v-flex",
-                                    { attrs: { xs12: "" } },
+                                    { attrs: { xs6: "" } },
                                     [
                                       _c("v-text-field", {
                                         attrs: {
                                           label: "Reference",
                                           disabled:
-                                            _vm.form.STATUS == "Approved"
+                                            _vm.form.status == "Approved"
                                         },
                                         model: {
-                                          value: _vm.form.REFERENCE,
+                                          value: _vm.form.reference,
                                           callback: function($$v) {
-                                            _vm.$set(_vm.form, "REFERENCE", $$v)
+                                            _vm.$set(_vm.form, "reference", $$v)
                                           },
-                                          expression: "form.REFERENCE"
+                                          expression: "form.reference"
+                                        }
+                                      })
+                                    ],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "v-flex",
+                                    { attrs: { xs6: "" } },
+                                    [
+                                      _c("v-select", {
+                                        attrs: {
+                                          disabled:
+                                            _vm.form.status == "Approved",
+                                          items: ["San Dimas", "La Verne"],
+                                          label: "location"
+                                        },
+                                        model: {
+                                          value: _vm.form.location,
+                                          callback: function($$v) {
+                                            _vm.$set(_vm.form, "location", $$v)
+                                          },
+                                          expression: "form.location"
                                         }
                                       })
                                     ],
@@ -25526,14 +25480,14 @@ var render = function() {
                                         attrs: {
                                           label: "Comments",
                                           disabled:
-                                            _vm.form.STATUS == "Approved"
+                                            _vm.form.status == "Approved"
                                         },
                                         model: {
-                                          value: _vm.form.COMMENTS,
+                                          value: _vm.form.comments,
                                           callback: function($$v) {
-                                            _vm.$set(_vm.form, "COMMENTS", $$v)
+                                            _vm.$set(_vm.form, "comments", $$v)
                                           },
-                                          expression: "form.COMMENTS"
+                                          expression: "form.comments"
                                         }
                                       })
                                     ],
@@ -25548,14 +25502,14 @@ var render = function() {
                                         attrs: {
                                           label: "Method",
                                           disabled:
-                                            _vm.form.STATUS == "Approved"
+                                            _vm.form.status == "Approved"
                                         },
                                         model: {
-                                          value: _vm.form.METHOD,
+                                          value: _vm.form.method,
                                           callback: function($$v) {
-                                            _vm.$set(_vm.form, "METHOD", $$v)
+                                            _vm.$set(_vm.form, "method", $$v)
                                           },
-                                          expression: "form.METHOD"
+                                          expression: "form.method"
                                         }
                                       })
                                     ],
@@ -25573,14 +25527,14 @@ var render = function() {
                                           items: _vm.sampleTypes,
                                           label: "Sample Type(s)",
                                           disabled:
-                                            _vm.form.STATUS == "Approved"
+                                            _vm.form.status == "Approved"
                                         },
                                         model: {
-                                          value: _vm.SAMPLE_TYPE,
+                                          value: _vm.sample_type,
                                           callback: function($$v) {
-                                            _vm.SAMPLE_TYPE = $$v
+                                            _vm.sample_type = $$v
                                           },
-                                          expression: "SAMPLE_TYPE"
+                                          expression: "sample_type"
                                         }
                                       })
                                     ],
@@ -25591,25 +25545,25 @@ var render = function() {
                                     "v-flex",
                                     { attrs: { xs12: "" } },
                                     [
-                                      _vm.form.PRNUMBER != null ||
-                                      _vm.SAMPLE_TYPE.indexOf("Event Related") >
+                                      _vm.form.prnumber != null ||
+                                      _vm.sample_type.indexOf("Event Related") >
                                         -1
                                         ? _c("v-text-field", {
                                             attrs: {
                                               label: "PR #",
                                               disabled:
-                                                _vm.form.STATUS == "Approved"
+                                                _vm.form.status == "Approved"
                                             },
                                             model: {
-                                              value: _vm.form.PRNUMBER,
+                                              value: _vm.form.prnumber,
                                               callback: function($$v) {
                                                 _vm.$set(
                                                   _vm.form,
-                                                  "PRNUMBER",
+                                                  "prnumber",
                                                   $$v
                                                 )
                                               },
-                                              expression: "form.PRNUMBER"
+                                              expression: "form.prnumber"
                                             }
                                           })
                                         : _vm._e()
@@ -25627,12 +25581,12 @@ var render = function() {
                                           ref: "menu",
                                           attrs: {
                                             "close-on-content-click": false,
-                                            "return-value": _vm.form.DATE_DUE,
+                                            "return-value": _vm.form.due_on,
                                             lazy: "",
                                             transition: "scale-transition",
                                             "offset-y": "",
                                             disabled:
-                                              _vm.form.STATUS == "Approved"
+                                              _vm.form.status == "Approved"
                                           },
                                           on: {
                                             "update:returnValue": function(
@@ -25640,7 +25594,7 @@ var render = function() {
                                             ) {
                                               _vm.$set(
                                                 _vm.form,
-                                                "DATE_DUE",
+                                                "due_on",
                                                 $event
                                               )
                                             }
@@ -25661,15 +25615,15 @@ var render = function() {
                                             },
                                             slot: "activator",
                                             model: {
-                                              value: _vm.form.DATE_DUE,
+                                              value: _vm.form.due_on,
                                               callback: function($$v) {
                                                 _vm.$set(
                                                   _vm.form,
-                                                  "DATE_DUE",
+                                                  "due_on",
                                                   $$v
                                                 )
                                               },
-                                              expression: "form.DATE_DUE"
+                                              expression: "form.due_on"
                                             }
                                           }),
                                           _vm._v(" "),
@@ -25677,20 +25631,20 @@ var render = function() {
                                             on: {
                                               input: function($event) {
                                                 _vm.$refs.menu.save(
-                                                  _vm.form.DATE_DUE
+                                                  _vm.form.due_on
                                                 )
                                               }
                                             },
                                             model: {
-                                              value: _vm.form.DATE_DUE,
+                                              value: _vm.form.due_on,
                                               callback: function($$v) {
                                                 _vm.$set(
                                                   _vm.form,
-                                                  "DATE_DUE",
+                                                  "due_on",
                                                   $$v
                                                 )
                                               },
-                                              expression: "form.DATE_DUE"
+                                              expression: "form.due_on"
                                             }
                                           })
                                         ],
@@ -25708,20 +25662,20 @@ var render = function() {
                                         attrs: {
                                           disabled:
                                             !_vm.$auth.check("reviewer") ||
-                                            _vm.form.STATUS == "Approved",
+                                            _vm.form.status == "Approved",
                                           items: _vm.users,
                                           label: "Assigned Reviewer"
                                         },
                                         model: {
-                                          value: _vm.form.ASSIGNED_REVIEWER,
+                                          value: _vm.form.assigned_reviewer,
                                           callback: function($$v) {
                                             _vm.$set(
                                               _vm.form,
-                                              "ASSIGNED_REVIEWER",
+                                              "assigned_reviewer",
                                               $$v
                                             )
                                           },
-                                          expression: "form.ASSIGNED_REVIEWER"
+                                          expression: "form.assigned_reviewer"
                                         }
                                       })
                                     ],
@@ -25743,7 +25697,7 @@ var render = function() {
                         "div",
                         {
                           class: [
-                            _vm.selecteditem.STATUS == "Approved"
+                            _vm.selecteditem.status == "Approved"
                               ? "alert-success"
                               : "alert-danger",
                             "px-2"
@@ -25753,7 +25707,7 @@ var render = function() {
                           _c("p", [
                             _vm._v(
                               "Current status: " +
-                                _vm._s(_vm.selecteditem.STATUS)
+                                _vm._s(_vm.selecteditem.status)
                             )
                           ])
                         ]
@@ -25766,19 +25720,23 @@ var render = function() {
                             ? _c("v-select", {
                                 attrs: {
                                   items: _vm.$auth.check("reviewer")
-                                    ? ["Redo", "Approved"]
-                                    : ["Completed"],
+                                    ? [
+                                        "In Progress",
+                                        "Waiting on Someone",
+                                        "Approved"
+                                      ]
+                                    : ["Submitted"],
                                   disabled:
                                     _vm.$auth.check("analyst") &&
-                                    !!_vm.selecteditem.APPROVED,
+                                    !!_vm.selecteditem.approved,
                                   label: "Update Status"
                                 },
                                 model: {
-                                  value: _vm.form.STATUS,
+                                  value: _vm.form.status,
                                   callback: function($$v) {
-                                    _vm.$set(_vm.form, "STATUS", $$v)
+                                    _vm.$set(_vm.form, "status", $$v)
                                   },
-                                  expression: "form.STATUS"
+                                  expression: "form.status"
                                 }
                               })
                             : _vm._e(),
@@ -25805,8 +25763,8 @@ var render = function() {
                                 color: "blue darken-1",
                                 flat: "",
                                 disabled:
-                                  _vm.form.STATUS == "Approved" &&
-                                  !!_vm.selecteditem.APPROVED
+                                  _vm.form.status == "Approved" &&
+                                  !!_vm.selecteditem.approved
                               },
                               nativeOn: {
                                 click: function($event) {
@@ -25841,7 +25799,7 @@ var render = function() {
                             attrs: {
                               headers: _vm.headers,
                               items: _vm.observations,
-                              "item-key": "Id",
+                              "item-key": "id",
                               "disable-initial-sort": "",
                               "hide-actions": "",
                               "select-all": ""
@@ -25858,7 +25816,7 @@ var render = function() {
                                           attrs: {
                                             primary: "",
                                             "hide-details": "",
-                                            disabled: !!props.item.APPROVED
+                                            disabled: !!props.item.approved
                                           },
                                           model: {
                                             value: props.selected,
@@ -25873,23 +25831,23 @@ var render = function() {
                                     ),
                                     _vm._v(" "),
                                     _c("td", [
-                                      _vm._v(_vm._s(props.item.REFERENCE))
+                                      _vm._v(_vm._s(props.item.reference))
                                     ]),
                                     _vm._v(" "),
                                     _c("td", [
-                                      _vm._v(_vm._s(props.item.OBSERVATION))
+                                      _vm._v(_vm._s(props.item.observation))
                                     ]),
                                     _vm._v(" "),
                                     _c("td", [
-                                      _vm._v(_vm._s(props.item.ACTIONS))
+                                      _vm._v(_vm._s(props.item.actions))
                                     ]),
                                     _vm._v(" "),
                                     _c("td", [
-                                      _vm._v(_vm._s(props.item.CRITICALITY))
+                                      _vm._v(_vm._s(props.item.criticality))
                                     ]),
                                     _vm._v(" "),
                                     _c("td", [
-                                      _vm._v(_vm._s(props.item.RESPONSE))
+                                      _vm._v(_vm._s(props.item.response))
                                     ]),
                                     _vm._v(" "),
                                     _c(
@@ -25899,7 +25857,7 @@ var render = function() {
                                           "justify-center layout px-0"
                                       },
                                       [
-                                        !props.item.APPROVED
+                                        !props.item.approved
                                           ? _c(
                                               "v-btn",
                                               {
@@ -25972,7 +25930,7 @@ var render = function() {
                                   attrs: {
                                     color: "blue darken-1",
                                     flat: "",
-                                    disabled: !!this.selecteditem.APPROVED
+                                    disabled: !!this.selecteditem.approved
                                   },
                                   nativeOn: {
                                     click: function($event) {
@@ -26114,7 +26072,7 @@ var render = function() {
               attrs: {
                 headers: _vm.headers,
                 items: _vm.sources,
-                "item-key": "Id",
+                "item-key": "id",
                 "disable-initial-sort": "",
                 search: _vm.search,
                 "rows-per-page-items": [10, 15, 50, { text: "All", value: -1 }]
@@ -26134,20 +26092,20 @@ var render = function() {
                           }
                         },
                         [
-                          _c("td", [_vm._v(_vm._s(props.item.REFERENCE))]),
+                          _c("td", [_vm._v(_vm._s(props.item.reference))]),
                           _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(props.item.REQUESTER))]),
+                          _c("td", [_vm._v(_vm._s(props.item.requester))]),
                           _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(props.item.COMMENTS))]),
+                          _c("td", [_vm._v(_vm._s(props.item.comments))]),
                           _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(props.item.METHOD))]),
+                          _c("td", [_vm._v(_vm._s(props.item.method))]),
                           _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(props.item.DATE_REQUESTED))]),
+                          _c("td", [_vm._v(_vm._s(props.item.created_at))]),
                           _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(props.item.DATE_DUE))]),
+                          _c("td", [_vm._v(_vm._s(props.item.due_on))]),
                           _vm._v(" "),
                           _c("td", [
-                            _vm._v(_vm._s(props.item.ASSIGNED_REVIEWER))
+                            _vm._v(_vm._s(props.item.assigned_reviewer))
                           ])
                         ]
                       )

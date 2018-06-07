@@ -11,26 +11,26 @@ use Illuminate\Support\Facades\DB;
 
 class TestController extends Controller
 {
-    public function test(Request $request){
-        $user = User::find(Auth::user()->id);
-        if ($request->mode == 'insert'){
-            DB::table('requests')->insert([
-                ['reference' => $request->REFERENCE, 'requester' => $user->username, 'comments' => $request->COMMENTS, 'method' => $request->METHOD, 
-                'sample_type' => $request->SAMPLE_TYPE, 'prnumber' => $request->PRNUMBER, 'assigned_reviewer' => $request->ASSIGNED_REVIEWER, 'updated_by' => $user->username,
-                 'date_due' => $request->DATE_DUE, 'status' => $request->STATUS]
-            ]);
-        }
-        elseif ($request->mode == 'update'){
-            $sample_type = JSON_ENCODE($request->SAMPLE_TYPE);
-            DB::table('requests')
-                ->where('Id', $request->Id)
-                ->update(['reference' => $request->REFERENCE, 'comments' => $request->COMMENTS, 'method' => $request->METHOD, 'sample_type' => $request->SAMPLE_TYPE,
-                'prnumber' => $request->PRNUMBER, 'assigned_reviewer' => $request->ASSIGNED_REVIEWER, 'updated_by' => $user->username, 'date_due' => $request->DATE_DUE,
-                'status' => $request->STATUS]);
-        }
+    // public function test(Request $request){
+    //     $user = User::find(Auth::user()->id);
+    //     if ($request->mode == 'insert'){
+    //         DB::table('requests')->insert([
+    //             ['reference' => $request->REFERENCE, 'requester' => $user->username, 'comments' => $request->COMMENTS, 'method' => $request->METHOD, 
+    //             'sample_type' => $request->SAMPLE_TYPE, 'prnumber' => $request->PRNUMBER, 'assigned_reviewer' => $request->ASSIGNED_REVIEWER, 'updated_by' => $user->username,
+    //              'date_due' => $request->DATE_DUE, 'status' => $request->STATUS]
+    //         ]);
+    //     }
+    //     elseif ($request->mode == 'update'){
+    //         $sample_type = JSON_ENCODE($request->SAMPLE_TYPE);
+    //         DB::table('requests')
+    //             ->where('Id', $request->Id)
+    //             ->update(['reference' => $request->REFERENCE, 'comments' => $request->COMMENTS, 'method' => $request->METHOD, 'sample_type' => $request->SAMPLE_TYPE,
+    //             'prnumber' => $request->PRNUMBER, 'assigned_reviewer' => $request->ASSIGNED_REVIEWER, 'updated_by' => $user->username, 'date_due' => $request->DATE_DUE,
+    //             'status' => $request->STATUS]);
+    //     }
         // $postdata = $request;
-        return response($request);
-    }
+        // return response($request);
+    // }
     public function postObs(Request $request){
         $user = User::find(Auth::user()->id);
         // $rid = DB::TABLE('requests')
@@ -60,16 +60,16 @@ class TestController extends Controller
         return response($request);
     }
 
-    public function approveRequest(Request $request)
-    {
-        $user = User::find(Auth::user()->id);
+    // public function approveRequest(Request $request)
+    // {
+    //     $user = User::find(Auth::user()->id);
 
-        if(DB::table('requests')->select('APPROVED')->where('Id', $request->Id))
-        {
-            DB::table('requests')
-            ->where('Id', $request->Id)
-            ->update(['approved' => 1, 'updated_by' => $user->username, 'approved_by' => $user->username]);
-            return response($request);
-        }
-    }
+    //     if(DB::table('requests')->select('APPROVED')->where('Id', $request->Id))
+    //     {
+    //         DB::table('requests')
+    //         ->where('Id', $request->Id)
+    //         ->update(['approved' => 1, 'updated_by' => $user->username, 'approved_by' => $user->username]);
+    //         return response($request);
+    //     }
+    // }
 }

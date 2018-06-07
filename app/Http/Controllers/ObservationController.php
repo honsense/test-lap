@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Observation;
 use Illuminate\Http\Request;
+use App\Request as Requests;
 
 class ObservationController extends Controller
 {
@@ -14,17 +15,7 @@ class ObservationController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return response(['observations'=>Observation::all()]);
     }
 
     /**
@@ -44,9 +35,9 @@ class ObservationController extends Controller
      * @param  \App\Observation  $observation
      * @return \Illuminate\Http\Response
      */
-    public function show(Observation $observation)
+    public function show(Observation $id)
     {
-        //
+        return response(['observation'=>$id]);
     }
 
     /**
@@ -68,17 +59,6 @@ class ObservationController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Observation $observation)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Observation  $observation
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Observation $observation)
     {
         //
     }

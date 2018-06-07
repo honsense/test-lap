@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Request;
+use App\Request as Requests;
+use App\User;
 use Illuminate\Http\Request;
 
 class RequestController extends Controller
@@ -14,17 +15,10 @@ class RequestController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return response([
+            'requests'=>Requests::all(), 
+            'users'=>User::select('username')->where('roles', 'reviewer')->get()
+        ]);
     }
 
     /**
@@ -35,7 +29,22 @@ class RequestController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $req = new Requests;
+        $req->user_id = $request->user()->id;
+        $req->reference = $request->reference;
+        $req->location = $request->location;
+        $req->comments = $request->comments;
+        $req->method = $request->method;
+        $req->sample_type = $request->sample_type;
+        $req->due_on = $request->due_on;
+        $req->assigned_reviewer = $request->assigned_reviewer;
+        $req->requester = $request->user()->username;
+        $req->status = 'Submitted';
+        $req->prnumber = $request->prnumber;
+        $req->updated_by = $request->user()->username;
+        $req->upDates()->save();
+
+        return $req;
     }
 
     /**
@@ -44,9 +53,9 @@ class RequestController extends Controller
      * @param  \App\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request)
+    public function show(Requests $id)
     {
-        //
+        return response(['request'=>$id]);
     }
 
     /**
@@ -55,7 +64,7 @@ class RequestController extends Controller
      * @param  \App\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request)
+    public function edit(Requests $requests)
     {
         //
     }
@@ -67,19 +76,27 @@ class RequestController extends Controller
      * @param  \App\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Request $request)
+    public function update(Request $request, Requests $req)
     {
-        //
+        $req = Requests::find($request->id);
+        $req->upDates($request);
+        $req->reference = $request->reference;
+        $req->location = $request->location;
+        $req->comments = $request->comments;
+        $req->method = $request->method;
+        $req->sample_type = $request->sample_type;
+        $req->due_on = $request->due_on;
+        $req->assigned_reviewer = $request->assigned_reviewer;
+        $req->status = $request->status;
+        $req->prnumber = $request->prnumber;
+        $req->updated_by = $request->user()->username;
+        $req->save();
+
+        return $req;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Request $request)
+    public function observations(Requests $id)
     {
-        //
+        return response(['observations'=>$id->observations]);
     }
 }

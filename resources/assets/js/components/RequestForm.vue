@@ -23,76 +23,82 @@
                 <v-card-text>
                     <v-container grid-list-md>
                         <v-layout wrap>
-                            <!-- <v-form :disabled="selecteditem.APPROVED"> -->
+                                <v-flex xs6>
+                                    <v-text-field v-model="form.reference" label="Reference" :disabled="form.status=='Approved'"></v-text-field>
+                                </v-flex>
+                                <v-flex xs6>
+                                    <v-select
+                                        :disabled="form.status=='Approved'"
+                                        :items="['San Dimas', 'La Verne']"
+                                        v-model="form.location"
+                                        label="location"
+                                        ></v-select>
+                                </v-flex> 
                                 <v-flex xs12>
-                                    <v-text-field v-model="form.REFERENCE" label="Reference" :disabled="form.STATUS=='Approved'"></v-text-field>
+                                    <v-text-field v-model="form.comments" label="Comments" :disabled="form.status=='Approved'"></v-text-field>
                                 </v-flex>
                                 <v-flex xs12>
-                                    <v-text-field v-model="form.COMMENTS" label="Comments" :disabled="form.STATUS=='Approved'"></v-text-field>
-                                </v-flex>
-                                <v-flex xs12>
-                                    <v-text-field v-model="form.METHOD" label="Method" :disabled="form.STATUS=='Approved'"></v-text-field>
+                                    <v-text-field v-model="form.method" label="Method" :disabled="form.status=='Approved'"></v-text-field>
                                 </v-flex>
                                 <v-flex xs12>
                                     <v-select
                                         multiple
                                         chips
                                         :items="sampleTypes"
-                                        v-model="SAMPLE_TYPE"
+                                        v-model="sample_type"
                                         label="Sample Type(s)"
-                                        :disabled="form.STATUS=='Approved'"
+                                        :disabled="form.status=='Approved'"
                                         ></v-select>
                                 </v-flex>
                                 <v-flex xs12>
-                                    <v-text-field v-if="form.PRNUMBER != null || SAMPLE_TYPE.indexOf('Event Related') > -1" v-model="form.PRNUMBER" label="PR #"
-                                        :disabled="form.STATUS=='Approved'"></v-text-field>
+                                    <v-text-field v-if="form.prnumber != null || sample_type.indexOf('Event Related') > -1" v-model="form.prnumber" label="PR #"
+                                        :disabled="form.status=='Approved'"></v-text-field>
                                 </v-flex>                                
                                 <v-flex xs6>
                                     <v-menu
                                         ref="menu"
                                         :close-on-content-click="false"
                                         v-model="menu"
-                                        :return-value.sync="form.DATE_DUE"
+                                        :return-value.sync="form.due_on"
                                         lazy
                                         transition="scale-transition"
                                         offset-y
-                                        :disabled="form.STATUS=='Approved'"
+                                        :disabled="form.status=='Approved'"
                                     >
                                         <v-text-field
                                             slot="activator"
-                                            v-model="form.DATE_DUE"
+                                            v-model="form.due_on"
                                             label="Due Date"
                                         ></v-text-field>
-                                        <v-date-picker v-model="form.DATE_DUE" @input="$refs.menu.save(form.DATE_DUE)"></v-date-picker>
+                                        <v-date-picker v-model="form.due_on" @input="$refs.menu.save(form.due_on)"></v-date-picker>
                                     </v-menu>
                                 </v-flex>
                                 <v-flex xs6>
                                     <v-select
-                                        :disabled="!$auth.check('reviewer') || form.STATUS=='Approved'"
+                                        :disabled="!$auth.check('reviewer') || form.status=='Approved'"
                                         :items="users"
-                                        v-model="form.ASSIGNED_REVIEWER"
+                                        v-model="form.assigned_reviewer"
                                         label="Assigned Reviewer"
                                         ></v-select>
-                                </v-flex>                                
-                            <!-- </v-form> -->
+                                </v-flex>
                         </v-layout>
                     </v-container>
                 </v-card-text>
                 <v-divider></v-divider>
-                <div v-bind:class="[ selecteditem.STATUS == 'Approved' ? 'alert-success' : 'alert-danger', 'px-2']">
-                    <p>Current status: {{ selecteditem.STATUS }}</p>
+                <div v-bind:class="[ selecteditem.status == 'Approved' ? 'alert-success' : 'alert-danger', 'px-2']">
+                    <p>Current status: {{ selecteditem.status }}</p>
                 </div>
                 <v-card-actions>
                     <v-select
                     v-if="title != 'New'"
-                    :items="$auth.check('reviewer') ? ['Redo', 'Approved'] : ['Completed']"
-                    :disabled="$auth.check('analyst') && !!selecteditem.APPROVED"
-                    v-model="form.STATUS"
+                    :items="$auth.check('reviewer') ? ['In Progress', 'Waiting on Someone', 'Approved'] : ['Submitted']"
+                    :disabled="$auth.check('analyst') && !!selecteditem.approved"
+                    v-model="form.status"
                     label="Update Status"
                     ></v-select>
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" flat @click.native="close">Cancel</v-btn>
-                    <v-btn color="blue darken-1" flat @click.native="postData" :disabled="form.STATUS=='Approved' && !!selecteditem.APPROVED">Save</v-btn>
+                    <v-btn color="blue darken-1" flat @click.native="postData" :disabled="form.status=='Approved' && !!selecteditem.approved">Save</v-btn>
                 </v-card-actions>
             </v-card>
         </v-tab-item>
@@ -102,7 +108,7 @@
                     <v-data-table
                         :headers="headers"
                         :items="observations"
-                        item-key="Id"
+                        item-key="id"
                         disable-initial-sort
                         hide-actions
                         select-all
@@ -116,16 +122,16 @@
                                         v-model="props.selected"
                                         primary
                                         hide-details
-                                        :disabled="!!props.item.APPROVED"
+                                        :disabled="!!props.item.approved"
                                     ></v-checkbox>
                                 </td>
-                                <td>{{ props.item.REFERENCE }}</td>
-                                <td>{{ props.item.OBSERVATION }}</td>
-                                <td>{{ props.item.ACTIONS }}</td>
-                                <td>{{ props.item.CRITICALITY }}</td>
-                                <td>{{ props.item.RESPONSE }}</td>
+                                <td>{{ props.item.reference }}</td>
+                                <td>{{ props.item.observation }}</td>
+                                <td>{{ props.item.actions }}</td>
+                                <td>{{ props.item.criticality }}</td>
+                                <td>{{ props.item.response }}</td>
                                 <td class="justify-center layout px-0">
-                                    <v-btn v-if="!props.item.APPROVED" icon class="mx-0" @click.native="editObservation(props.item)">
+                                    <v-btn v-if="!props.item.approved" icon class="mx-0" @click.native="editObservation(props.item)">
                                         <v-icon color="teal">edit</v-icon>
                                     </v-btn>
                                     <v-icon v-else color="teal">done</v-icon>
@@ -137,7 +143,7 @@
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" flat @click.native="close">Close</v-btn>
-                    <v-btn v-if="!filteredSelected.length && $auth.check('reviewer')" color="blue darken-1" flat @click.native="newObservation" :disabled="!!this.selecteditem.APPROVED">Add Observation</v-btn>
+                    <v-btn v-if="!filteredSelected.length && $auth.check('reviewer')" color="blue darken-1" flat @click.native="newObservation" :disabled="!!this.selecteditem.approved">Add Observation</v-btn>
                     <v-btn v-else-if="!!filteredSelected.length && $auth.check('reviewer')" color="blue darken-1" flat @click.native="approveObs">Approve Observation{{filteredSelected.length>1 ? 's' : ''}}</v-btn>
                 </v-card-actions>
             </v-card>
@@ -170,23 +176,24 @@ export default {
                 'Validation',
                 'Preparation',
                 'CTL',
+                'Test Method Transfer',
                 'Event Related',
             ],
             headers: [
-                {text: 'Reference', value: 'REFERENCE'},
-                {text: 'Observation', value: 'OBSERVATION'},
-                {text: 'Actions', value: 'ACTIONS'},
-                {text: 'Criticality', value: 'CRITICALITY'},
-                {text: 'Response', value: 'RESPONSE'},
-                {text: 'Edit', value: 'Id', sortable: false},
+                {text: 'Reference', value: 'reference'},
+                {text: 'Observation', value: 'observation'},
+                {text: 'Actions', value: 'actions'},
+                {text: 'Criticality', value: 'criticality'},
+                {text: 'Response', value: 'response'},
+                {text: 'Edit', value: 'id', sortable: false},
             ],
             showObsForm: false,
             form: {
                 mode: '',
-                DATE_DUE: null,
-                STATUS: 'Completed',
+                due_on: null,
+                status: 'Completed',
             },
-            SAMPLE_TYPE: null,
+            sample_type: null,
             selected: [],   
             menu: false,         
         }
@@ -195,16 +202,18 @@ export default {
     methods:{
         refresh: function () {
             this.search = null;
-            this.$http.get('/getobservations', {params: {"Id": this.selecteditem.Id}})
-            .then(res => {
-                this.observations = res.data.observations;
-            });
-            // if(obs) {
-            //         this.showObsform = false;
-            //         this.showReqform = true;
-            //     }
-            // else {
-            //     this.dialog = false;
+            if(this.selecteditem.id){
+                this.$http.get(`/requests/${this.selecteditem.id}/observations`)
+                .then(res => {
+                    this.observations = res.data.observations;
+                });
+                // if(obs) {
+                //         this.showObsform = false;
+                //         this.showReqform = true;
+                //     }
+                // else {
+                //     this.dialog = false;
+            }
         },
 
         close(){
@@ -212,29 +221,26 @@ export default {
         },
         
         postData: function(){
-            if(this.SAMPLE_TYPE.length > 0){
-                this.form.SAMPLE_TYPE = JSON.stringify(this.SAMPLE_TYPE);
+            if(this.sample_type.length > 0){
+                this.form.sample_type = JSON.stringify(this.sample_type);
             }
             else{
-                this.form.SAMPLE_TYPE = null;
+                this.form.sample_type = null;
             }
 
-            if(this.form.STATUS == 'Approved'){
+            if(this.form.status == 'Approved'){
                 for (var x in this.observations){
-                    if (!this.observations[x].APPROVED){
+                    if (!this.observations[x].approved){
                         alert('Please approve all observations prior to approving the record!');
                         return;
                     }
                 }
-
-                this.approveRequest();
-
             }
 
             var app = this
             // app.progress=true;
             this.$http.post(
-                "test", this.form
+                `${this.selecteditem.id ? 'requests/'+`${this.selecteditem.id}`+'/update' : 'requests/create'}`, this.form
             )
             .then(
                 function(status){
@@ -252,7 +258,7 @@ export default {
         },
 
         newObservation: function () {
-            this.observation = {REQUEST_ID: this.selecteditem.Id, REFERENCE: this.selecteditem.REFERENCE};
+            this.observation = {request_id: this.selecteditem.id, reference: this.selecteditem.reference};
             this.showObsForm = true;
         },
         
@@ -266,12 +272,12 @@ export default {
             var ids = [];
             
             for(var x in this.selected){
-                if (!this.selected[x].APPROVED){
-                    ids.push(this.selected[x].Id)
+                if (!this.selected[x].approved){
+                    ids.push(this.selected[x].id)
                 };
             }
             this.$http.post(
-                "approveObs", {'Id':ids}
+                "approveObs", {'id':ids}
             )
             .then(status => 
                 {
@@ -309,7 +315,7 @@ export default {
     
     computed:{
         title: function () {
-            if (this.selecteditem.Id){
+            if (this.selecteditem.id){
                 this.form.mode = 'update';
                 return "Edit"
             }
@@ -321,18 +327,18 @@ export default {
 
         filteredSelected: function() {
             return this.selected.filter(item => {
-                return !item.APPROVED
+                return !item.approved
             });
         },
     },
     created() {
         this.refresh();
         Object.assign(this.form, this.selecteditem);
-        if(this.form.SAMPLE_TYPE){
-            this.SAMPLE_TYPE = JSON.parse(this.form.SAMPLE_TYPE);
+        if(this.form.sample_type){
+            this.sample_type = JSON.parse(this.form.sample_type);
         }
         else{
-            this.SAMPLE_TYPE = [];
+            this.sample_type = [];
         }
     }
 }

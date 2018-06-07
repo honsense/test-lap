@@ -19,7 +19,7 @@
   <v-data-table
     :headers="headers"
     :items="sources"
-    item-key="Id"
+    item-key="id"
     disable-initial-sort
     class="elevation-1"
     :search="search"
@@ -27,13 +27,13 @@
   >
     <template slot="items" slot-scope="props">
     <tr @click="onSelect(props.item)">
-      <td>{{ props.item.REFERENCE }}</td>
-      <td>{{ props.item.REQUESTER }}</td>
-      <td>{{ props.item.COMMENTS }}</td>
-      <td>{{ props.item.METHOD }}</td>
-      <td>{{ props.item.DATE_REQUESTED }}</td>
-      <td>{{ props.item.DATE_DUE }}</td>
-      <td>{{ props.item.ASSIGNED_REVIEWER }}</td>
+      <td>{{ props.item.reference }}</td>
+      <td>{{ props.item.requester }}</td>
+      <td>{{ props.item.comments }}</td>
+      <td>{{ props.item.method }}</td>
+      <td>{{ props.item.created_at }}</td>
+      <td>{{ props.item.due_on }}</td>
+      <td>{{ props.item.assigned_reviewer }}</td>
     </tr>
     </template>
     <template slot="no-results" :value="true">
@@ -94,13 +94,13 @@ export default {
         return{
             dialog: false,
             headers: [
-                {text: 'Reference', value: 'REFERENCE'},
-                {text: 'Requester', value: 'REQUESTER'},
-                {text: 'Comments', value: 'COMMENTS'},
-                {text: 'Method', value: 'METHOD'},
-                {text: 'Date Requested', value: 'DATE_REQUESTED'},
-                {text: 'Date Due', value: 'DATE_DUE'},
-                {text: 'Assigned Reviewer', value: 'ASSIGNED_REVIEWER'},
+                {text: 'Reference', value: 'reference'},
+                {text: 'Requester', value: 'requester'},
+                {text: 'Comments', value: 'comments'},
+                {text: 'Method', value: 'method'},
+                {text: 'Date Requested', value: 'created_at'},
+                {text: 'Date Due', value: 'due_on'},
+                {text: 'Assigned Reviewer', value: 'assigned_reviewer'},
             ], 
             sources: [],
             progress: true,
@@ -114,7 +114,7 @@ export default {
             this.searched = searchByRef(this.sources, this.search);
         },
         onSelect: function(item){
-            this.$http.get('/getselectedrequest', {params: {"Id": item.Id}})
+            this.$http.get(`/requests/${item.id}`)
             .then(res =>
             {
                 if(res.status = 200){
@@ -128,11 +128,11 @@ export default {
         },
         newRequest: function() {
             this.dialog = true;
-            this.selecteditem = {REFERENCE: this.search}; //may just use {} instead of REFERENCE: this.search
+            this.selecteditem = {reference: this.search}; //may just use {} instead of REFERENCE: this.search
         },
         refresh: function (obs) {
             this.search = null;
-            this.$http.get('/getrequests')
+            this.$http.get('/requests')
             .then(res => {
                 this.sources = res.data.requests;
                 this.users = res.data.users.map(x => {return x.username});
@@ -147,7 +147,7 @@ export default {
     computed:{
         filteredItems: function(){
             return this.sources.filter((item)=>{
-                return item.REFERENCE.match(this.search)
+                return item.reference.match(this.search)
             });
         }
     }

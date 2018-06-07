@@ -14,7 +14,6 @@ class AuthController extends Controller
     public function register(RegisterFormRequest $request)
     {
         $user = new User;
-        $user->email = $request->email;
         $user->username = $request->username;
         $user->roles = $request->role;
         $user->password = bcrypt($request->password);
@@ -51,35 +50,6 @@ class AuthController extends Controller
         return response([
             'status' => 'success',
             'data' => $user
-        ]);
-    }
-
-    public function getrequests (Request $request)
-    {
-        $records = DB::table('requests')->get();
-        $users = DB::table('users')->select('username')->where('roles', 'reviewer')->get();
-
-        return response([
-            'status' => 'success',
-            'requests' => $records,
-            'users' => $users
-        ]);
-    }
-    public function getobservations (Request $request)
-    {
-        $observations = DB::table('observations')->where('request_id', $request->Id)->get();
-        return response([
-            'status' => 'success',
-            'observations' => $observations,
-        ]);
-    }
-
-    public function getselectedrequest (Request $request)
-    {
-        $request = DB::table('requests')->where('Id', $request->Id)->first();
-        return response([
-            'status' => 'success',
-            'request' => $request
         ]);
     }
 

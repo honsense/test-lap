@@ -21,15 +21,24 @@ Route::post('auth/login', 'AuthController@login');
 
 Route::group(['middleware' => 'jwt.auth'], function(){
 	Route::post('auth/register', 'AuthController@register');
-	Route::get('getrequests', 'AuthController@getrequests');
-	Route::get('getselectedrequest', 'AuthController@getselectedrequest');
-	Route::get('getobservations', 'AuthController@getobservations');
+
+	Route::get('requests', 'RequestController@index');
+	Route::get('requests/{id}', 'RequestController@show');
+	Route::get('requests/{id}/observations', 'RequestController@observations');
+	Route::post('requests/{id}/update', 'RequestController@update');
+	Route::post('requests/create', 'RequestController@store');
+
+
+	Route::get('observations', 'ObservationController@index');
+	Route::get('observations/{id}', 'ObservationController@show');
+	Route::post('observations/update/{id}', 'ObservationController@update');
+	Route::post('observations/create', 'ObservationController@store');
+
 	Route::post('changePass', 'AuthController@changePass');
 	Route::post('passwordReset', 'AuthController@passwordReset');
-	Route::post('test', 'TestController@test');
-	Route::post('postObs', 'TestController@postObs');
-	Route::post('approveObs', 'TestController@approveObs');
-	Route::post('approveRequest', 'TestController@approveRequest');
+
+	Route::post('approveObs', 'TestController@approveObs'); //woof
+
 	Route::get('auth/user', 'AuthController@user');
 	Route::post('auth/logout', 'AuthController@logout');
 });

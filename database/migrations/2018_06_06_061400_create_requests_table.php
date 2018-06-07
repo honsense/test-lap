@@ -17,6 +17,7 @@ class CreateRequestsTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->string('reference')->unique();
+            $table->string('location');
             $table->string('sample_type')->nullable();
             $table->string('requester');
             $table->string('method');
@@ -26,11 +27,12 @@ class CreateRequestsTable extends Migration
             $table->integer('approved')->default(0);
             $table->datetime('approved_on')->nullable();
             $table->string('approved_by')->nullable();
-            $table->datetime('completed_on')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->datetime('submitted_on')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->datetime('started_on')->nullable();
             $table->datetime('to_analyst_on')->nullable();
             $table->datetime('assigned_on')->nullable();
             $table->string('prnumber')->nullable();
-            $table->string('updated_by')->nullable();
+            $table->string('updated_by');
             $table->string('status');
             $table->timestamps(); //check for references to DATE_REQUESTED, UPDATED_ON
         });
