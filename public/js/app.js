@@ -24885,7 +24885,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             headers: [{ text: 'Reference', value: 'reference' }, { text: 'Observation', value: 'observation' }, { text: 'Actions', value: 'actions' }, { text: 'Criticality', value: 'criticality' }, { text: 'Response', value: 'response' }, { text: 'Edit', value: 'id', sortable: false }],
             showObsForm: false,
             form: {
-                mode: '',
                 due_on: null,
                 status: 'Completed'
             },
@@ -24905,12 +24904,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.$http.get('/requests/' + this.selecteditem.id + '/observations').then(function (res) {
                     _this.observations = res.data.observations;
                 });
-                // if(obs) {
-                //         this.showObsform = false;
-                //         this.showReqform = true;
-                //     }
-                // else {
-                //     this.dialog = false;
             }
         },
 
@@ -24969,18 +24962,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     ids.push(this.selected[x].id);
                 };
             }
-            this.$http.post("approveObs", { 'id': ids }).then(function (status) {
+            this.$http.post("observations/approve", { 'id': ids }).then(function (status) {
                 if (status.status = 200) {
                     _this2.refresh();
                     _this2.selected = [];
                 }
             }).catch(function (e) {
-                alert(e);
-            });
-        },
-
-        approveRequest: function approveRequest() {
-            this.$http.post("approveRequest", this.selecteditem).then().catch(function (e) {
                 alert(e);
             });
         }
@@ -24989,10 +24976,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     computed: {
         title: function title() {
             if (this.selecteditem.id) {
-                this.form.mode = 'update';
                 return "Edit";
             } else {
-                this.form.mode = 'insert';
                 return "New";
             }
         },
@@ -25122,9 +25107,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     props: ['showObsForm', 'observation'],
     data: function data() {
         return {
-            form: {
-                mode: ''
-            }
+            form: {}
         };
     },
 
@@ -25137,7 +25120,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         postData: function postData() {
             var app = this;
             // app.progress=true;
-            this.$http.post("postObs", this.form).then(function (status) {
+            this.$http.post('' + (this.observation.id ? 'observations/' + ('' + this.observation.id) + '/update' : 'observations/create'), this.form).then(function (status) {
                 if (status.status = 200) {
                     app.$emit('refresh');
                     app.$emit('update:showObsForm', false);
@@ -25151,10 +25134,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     computed: {
         title: function title() {
             if (this.observation.id) {
-                this.form.mode = 'update';
                 return "Edit";
             } else {
-                this.form.mode = 'insert';
                 return "New";
             }
         }
@@ -25274,6 +25255,30 @@ var render = function() {
                             "v-flex",
                             { attrs: { xs12: "" } },
                             [
+                              _vm.title != "New"
+                                ? _c("v-text-field", {
+                                    attrs: {
+                                      "multi-line": "",
+                                      "auto-grow": "",
+                                      label: "Response"
+                                    },
+                                    model: {
+                                      value: _vm.form.response,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.form, "response", $$v)
+                                      },
+                                      expression: "form.response"
+                                    }
+                                  })
+                                : _vm._e()
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-flex",
+                            { attrs: { xs12: "" } },
+                            [
                               _c("v-select", {
                                 attrs: {
                                   items: ["Minor", "Major", "Critical"],
@@ -25288,26 +25293,6 @@ var render = function() {
                                   expression: "form.criticality"
                                 }
                               })
-                            ],
-                            1
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "v-flex",
-                            { attrs: { xs12: "" } },
-                            [
-                              _vm.title != "New"
-                                ? _c("v-text-field", {
-                                    attrs: { label: "Response" },
-                                    model: {
-                                      value: _vm.form.response,
-                                      callback: function($$v) {
-                                        _vm.$set(_vm.form, "response", $$v)
-                                      },
-                                      expression: "form.response"
-                                    }
-                                  })
-                                : _vm._e()
                             ],
                             1
                           )
@@ -25458,7 +25443,7 @@ var render = function() {
                                           disabled:
                                             _vm.form.status == "Approved",
                                           items: ["San Dimas", "La Verne"],
-                                          label: "location"
+                                          label: "Location"
                                         },
                                         model: {
                                           value: _vm.form.location,

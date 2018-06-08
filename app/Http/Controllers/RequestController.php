@@ -40,6 +40,7 @@ class RequestController extends Controller
         $req->assigned_reviewer = $request->assigned_reviewer;
         $req->requester = $request->user()->username;
         $req->status = 'Submitted';
+        $req->submitted_on = now();
         $req->prnumber = $request->prnumber;
         $req->updated_by = $request->user()->username;
         $req->upDates()->save();

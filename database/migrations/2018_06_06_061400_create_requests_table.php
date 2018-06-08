@@ -27,7 +27,7 @@ class CreateRequestsTable extends Migration
             $table->integer('approved')->default(0);
             $table->datetime('approved_on')->nullable();
             $table->string('approved_by')->nullable();
-            $table->datetime('submitted_on')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->datetime('submitted_on');
             $table->datetime('started_on')->nullable();
             $table->datetime('to_analyst_on')->nullable();
             $table->datetime('assigned_on')->nullable();

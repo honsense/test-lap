@@ -31,7 +31,7 @@
                                         :disabled="form.status=='Approved'"
                                         :items="['San Dimas', 'La Verne']"
                                         v-model="form.location"
-                                        label="location"
+                                        label="Location"
                                         ></v-select>
                                 </v-flex> 
                                 <v-flex xs12>
@@ -189,7 +189,6 @@ export default {
             ],
             showObsForm: false,
             form: {
-                mode: '',
                 due_on: null,
                 status: 'Completed',
             },
@@ -207,12 +206,6 @@ export default {
                 .then(res => {
                     this.observations = res.data.observations;
                 });
-                // if(obs) {
-                //         this.showObsform = false;
-                //         this.showReqform = true;
-                //     }
-                // else {
-                //     this.dialog = false;
             }
         },
 
@@ -277,7 +270,7 @@ export default {
                 };
             }
             this.$http.post(
-                "approveObs", {'id':ids}
+                "observations/approve", {'id':ids}
             )
             .then(status => 
                 {
@@ -292,35 +285,14 @@ export default {
                 alert(e);
             });
         },
-
-        approveRequest: function () {
-            this.$http.post(
-                "approveRequest", this.selecteditem
-            )
-            .then(
-                // status => 
-                // {
-                //     if(status.status = 200){
-                //         this.$emit('refresh');
-                //         this.$emit('update:dialog', false);
-                //     }
-                // }
-            )
-            .catch(e =>
-            {
-                alert(e);
-            });
-        },
     },
     
     computed:{
         title: function () {
             if (this.selecteditem.id){
-                this.form.mode = 'update';
                 return "Edit"
             }
             else {
-                this.form.mode = 'insert';
                 return "New"
             }
         },

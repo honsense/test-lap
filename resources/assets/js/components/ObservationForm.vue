@@ -25,15 +25,15 @@
                             <v-text-field multi-line auto-grow v-model="form.actions" label="Action" :disabled="!$auth.check('reviewer')"></v-text-field>
                         </v-flex>
                         <v-flex xs12>
+                            <v-text-field multi-line auto-grow v-if="title != 'New'" v-model="form.response" label="Response"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12>
                             <v-select
                                 :items="['Minor', 'Major', 'Critical']"
                                 :disabled="$auth.check('analyst')"
                                 v-model="form.criticality"
                                 label="Criticality"
                             ></v-select>
-                        </v-flex>
-                        <v-flex xs12>
-                            <v-text-field v-if="title != 'New'" v-model="form.response" label="Response"></v-text-field>
                         </v-flex>
                     </v-layout>
                 </v-container>
@@ -54,7 +54,6 @@ export default {
     data (){
         return{
             form: {
-                mode: '',
             },
         }
     },
@@ -67,7 +66,7 @@ export default {
             var app = this;
             // app.progress=true;
             this.$http.post(
-                "postObs", this.form
+                `${this.observation.id ? 'observations/'+`${this.observation.id}`+'/update' : 'observations/create'}`, this.form
             )
             .then(
                 function(status){
@@ -87,11 +86,9 @@ export default {
     computed:{
         title: function () {
             if (this.observation.id){
-                this.form.mode = 'update';
                 return "Edit"
             }
             else {
-                this.form.mode = 'insert';
                 return "New"
             }
         },

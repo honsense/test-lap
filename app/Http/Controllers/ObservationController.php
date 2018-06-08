@@ -26,7 +26,16 @@ class ObservationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $obs = new Observation;
+        $obs->user_id = $request->user()->id;
+        $obs->request_id = $request->request_id;
+        $obs->reference = $request->reference;
+        $obs->observation = $request->observation;
+        $obs->actions = $request->actions;
+        $obs->criticality = $request->criticality;
+        $obs->created_by = $request->user()->username;
+        $obs->updated_by = $request->user()->username;
+        $obs->save();
     }
 
     /**
@@ -58,8 +67,29 @@ class ObservationController extends Controller
      * @param  \App\Observation  $observation
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Observation $observation)
+    public function update(Request $request, Observation $id)
     {
-        //
+        $id->upDates($request);
+        $id->observation = $request->observation;
+        $id->actions = $request->actions;
+        $id->response = $request->response;
+        $id->criticality = $request->criticality;
+        $id->updated_by = $request->user()->username;
+        $id->save();
+    }
+
+    public function approve(Request $id)
+    {
+        if($id->user()->roles == 'reviewer'){
+            Observation::wherein('id', $id->id)
+            ->update(
+                ['approved'=>1,
+                 'approved_on'=>now(),
+                 'approved_by'=>$id->user()->username,
+                 'updated_by'=>$id->user()->username
+                ]);
+
+            return response('success');
+        }
     }
 }

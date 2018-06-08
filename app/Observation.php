@@ -15,4 +15,20 @@ class Observation extends Model
     {
         return $this->belongsTo('App\User');
     }
+
+    public function upDates($request)
+    {
+        // if ($this->approved == 0 && $request->approved == 1)
+        // {
+        //     $this->approved_on = now();
+        //     $this->approved_by = $request->user()->username;
+        // }
+
+        if (!$this->responded_on && !!$request->response)
+        {
+            $this->responded_on = now();
+        }
+
+        return $this;
+    }
 }
